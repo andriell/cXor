@@ -3,7 +3,9 @@ package andriell.cxor;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Rybalko on 26.08.2016.
@@ -25,6 +27,8 @@ public class MainFrame {
     private File dataFile;
     private File keyFile;
     private File saveFile;
+    private Encrypt encrypt = new Encrypt();
+
 
 
     public void show() {
@@ -33,7 +37,7 @@ public class MainFrame {
 
         frame.setContentPane(rootPane);
 
-        frame.setSize(300, 180);
+        frame.setSize(400, 180);
         frame.setResizable(false);
         frame.setVisible(true);
 
@@ -61,20 +65,20 @@ public class MainFrame {
             }
         });
 
-
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int ret = saveFileChooser.showSaveDialog(frame);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     saveFile = saveFileChooser.getSelectedFile();
                     update();
+
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.execute(encrypt);
                 }
             }
         });
 
         update();
-
-
     }
 
     private void update() {
@@ -88,11 +92,53 @@ public class MainFrame {
         } else {
             keyLabel.setText(keyFile.getName());
         }
-        saveProgressBar.setMinimum(0);
-        saveProgressBar.setMaximum(10);
-        saveProgressBar.setValue(0);
-        saveProgressBar.setString("0 %");
 
         saveButton.setEnabled(dataFile != null && keyFile != null);
+    }
+
+    private class Encrypt implements Runnable {
+
+        public void run() {
+            if (!(dataFile != null && keyFile != null && dataFile.isFile() && keyFile.isFile())) {
+                return;
+            }
+            dataButton.setEnabled(false);
+            keyButton.setEnabled(false);
+            keyShiftTextField.setEnabled(false);
+            saveButton.setEnabled(false);
+            try {
+                CircularInputStream dataIs = new CircularInputStream(dataFile);
+                CircularInputStream keyIs = new CircularInputStream(keyFile);
+                BufferedOutputStream saveOs = new BufferedOutputStream(new FileOutputStream(saveFile));
+
+                int dataSize = (int) dataFile.length();
+                int keyShift = Integer.parseInt(keyShiftTextField.getText());
+                if (keyShift > 0) {
+                    keyIs.skip(keyShift);
+                }
+
+                saveProgressBar.setMinimum(0);
+                saveProgressBar.setMaximum(dataSize);
+                saveProgressBar.setValue(0);
+
+                for (int i = 0; i < dataSize; i++) {
+                    saveOs.write(dataIs.read() ^ keyIs.read());
+                    saveProgressBar.setValue(i);
+                    ;
+                    saveProgressBar.setString( ( Math.round(i * 1000.0f / dataSize) / 10.0f ) + "%" );
+                }
+                saveOs.flush();
+                saveOs.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            dataButton.setEnabled(true);
+            keyButton.setEnabled(true);
+            keyShiftTextField.setEnabled(true);
+            saveButton.setEnabled(true);
+            saveProgressBar.setValue(0);
+            saveProgressBar.setString("0%");
+        }
     }
 }
