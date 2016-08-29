@@ -7,13 +7,13 @@ import java.io.*;
  */
 public class CircularInputStream {
     private File file;
-    private BufferedInputStream bis;
+    private FileInputStream is;
     private long position;
     private long fileSize;
 
     public CircularInputStream(File file) throws FileNotFoundException {
         this.file = file;
-        bis = new BufferedInputStream(new FileInputStream(file));
+        is = new FileInputStream(file);
         position = 0;
         fileSize = file.length();
     }
@@ -21,19 +21,19 @@ public class CircularInputStream {
     public byte read() throws IOException {
         checkPosition();
         position++;
-        return (byte) bis.read();
+        return (byte) is.read();
     }
 
     public void skip(long i) throws IOException {
-        for (;i > 0; i--) {
+        for (; i > 0; i--) {
             read();
         }
     }
 
     private void checkPosition() throws IOException {
         if (position >= fileSize) {
-            bis.close();
-            bis = new BufferedInputStream(new FileInputStream(file));
+            is.close();
+            is = new FileInputStream(file);
             position = 0;
         }
     }
