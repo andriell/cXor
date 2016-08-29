@@ -28,8 +28,7 @@ public class MainFrame {
     private File keyFile;
     private File saveFile;
     private Encrypt encrypt = new Encrypt();
-
-
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public void show() {
         frame = new JFrame("Crypto xor");
@@ -71,8 +70,6 @@ public class MainFrame {
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     saveFile = saveFileChooser.getSelectedFile();
                     update();
-
-                    ExecutorService executor = Executors.newSingleThreadExecutor();
                     executor.execute(encrypt);
                 }
             }
@@ -125,7 +122,7 @@ public class MainFrame {
                     saveOs.write(dataIs.read() ^ keyIs.read());
                     saveProgressBar.setValue(i);
                     ;
-                    saveProgressBar.setString( ( Math.round(i * 1000.0f / dataSize) / 10.0f ) + "%" );
+                    saveProgressBar.setString((Math.round(i * 1000.0f / dataSize) / 10.0f) + "%");
                 }
                 saveOs.flush();
                 saveOs.close();
