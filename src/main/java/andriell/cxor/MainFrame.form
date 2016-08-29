@@ -80,7 +80,7 @@
         </constraints>
         <properties>
           <columns value="5"/>
-          <text value="0"/>
+          <text value="100"/>
         </properties>
       </component>
       <component id="ac416" class="javax.swing.JLabel">
