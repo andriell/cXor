@@ -7,13 +7,13 @@ import java.io.*;
  */
 public class CircularInputStream {
     private File file;
-    private FileInputStream is;
+    private BufferedInputStream is;
     private long position;
     private long fileSize;
 
     public CircularInputStream(File file) throws FileNotFoundException {
         this.file = file;
-        is = new FileInputStream(file);
+        is = new BufferedInputStream(new FileInputStream(file));
         position = 0;
         fileSize = file.length();
     }
@@ -33,7 +33,7 @@ public class CircularInputStream {
     private void checkPosition() throws IOException {
         if (position >= fileSize) {
             is.close();
-            is = new FileInputStream(file);
+            is = new BufferedInputStream(new FileInputStream(file));
             position = 0;
         }
     }
