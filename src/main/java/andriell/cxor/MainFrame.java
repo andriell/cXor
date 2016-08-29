@@ -9,20 +9,22 @@ import java.io.File;
  * Created by Rybalko on 26.08.2016.
  */
 public class MainFrame {
-    private JButton file1Button;
-    private JButton file2Button;
-    private JButton goButton;
-    private JProgressBar progressBar1;
+    private JButton dataButton;
+    private JButton keyButton;
+    private JButton saveButton;
+    private JProgressBar saveProgressBar;
     private JPanel rootPane;
-    private JLabel label1;
-    private JLabel label2;
+    private JLabel dataLabel;
+    private JLabel keyLabel;
+    private JTextField keyShiftTextField;
 
     private JFrame frame;
-    private JFileChooser fileChooser1;
-    private JFileChooser fileChooser2;
-    private JFileChooser fileChooser3;
-    private File file1;
-    private File file2;
+    private JFileChooser dataFileChooser;
+    private JFileChooser keyFileChooser;
+    private JFileChooser saveFileChooser;
+    private File dataFile;
+    private File keyFile;
+    private File saveFile;
 
 
     public void show() {
@@ -31,43 +33,66 @@ public class MainFrame {
 
         frame.setContentPane(rootPane);
 
-        frame.setSize(300, 150);
+        frame.setSize(300, 180);
         frame.setResizable(false);
         frame.setVisible(true);
 
-        fileChooser1 = new JFileChooser();
-        fileChooser2 = new JFileChooser();
-        fileChooser3 = new JFileChooser();
+        dataFileChooser = new JFileChooser();
+        keyFileChooser = new JFileChooser();
+        saveFileChooser = new JFileChooser();
 
-        file1Button.addActionListener(new ActionListener() {
+        dataButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int ret = fileChooser1.showOpenDialog(frame);
+                int ret = dataFileChooser.showOpenDialog(frame);
                 if (ret == JFileChooser.APPROVE_OPTION) {
-                    file1 = fileChooser1.getSelectedFile();
-                    label1.setText(file1.getName());
+                    dataFile = dataFileChooser.getSelectedFile();
+                    update();
                 }
             }
         });
 
-        file2Button.addActionListener(new ActionListener() {
+        keyButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int ret = fileChooser2.showOpenDialog(frame);
+                int ret = keyFileChooser.showOpenDialog(frame);
                 if (ret == JFileChooser.APPROVE_OPTION) {
-                    file2 = fileChooser2.getSelectedFile();
-                    label2.setText(file2.getName());
+                    keyFile = keyFileChooser.getSelectedFile();
+                    update();
                 }
             }
         });
 
 
-        goButton.addActionListener(new ActionListener() {
+        saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int ret = fileChooser3.showSaveDialog(frame);
+                int ret = saveFileChooser.showSaveDialog(frame);
                 if (ret == JFileChooser.APPROVE_OPTION) {
-
+                    saveFile = saveFileChooser.getSelectedFile();
+                    update();
                 }
             }
         });
 
+        update();
+
+
+    }
+
+    private void update() {
+        if (dataFile == null) {
+            dataLabel.setText("Not set");
+        } else {
+            dataLabel.setText(dataFile.getName());
+        }
+        if (keyFile == null) {
+            keyLabel.setText("Not set");
+        } else {
+            keyLabel.setText(keyFile.getName());
+        }
+        saveProgressBar.setMinimum(0);
+        saveProgressBar.setMaximum(10);
+        saveProgressBar.setValue(0);
+        saveProgressBar.setString("0 %");
+
+        saveButton.setEnabled(dataFile != null && keyFile != null);
     }
 }
