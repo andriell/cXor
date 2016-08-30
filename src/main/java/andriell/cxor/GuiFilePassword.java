@@ -3,10 +3,7 @@ package andriell.cxor;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 
 /**
  * Created by Rybalko on 30.08.2016.
@@ -23,6 +20,8 @@ public class GuiFilePassword {
 
     private JFileChooser dataFileChooser;
     private File dataFile;
+
+    private static final String CHARSET = "UTF-8";
 
     public JPanel getRootPane() {
         return rootPane;
@@ -44,20 +43,50 @@ public class GuiFilePassword {
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (dataFile == null || !dataFile.isFile()) {
+                    fileLabel.setText("The file is not loaded");
                     return;
                 }
                 try {
-                    PasswordSequence sequence = new PasswordSequence(passwordField.getPassword());
                     CircularInputStream dataIs = new CircularInputStream(dataFile);
                     int fileSize = (int) dataFile.length();
                     byte[] data = new byte[fileSize];
-                    for (int i = 0; i < fileSize; i++) {
-                        data[i] = (byte) (sequence.read() ^ dataIs.read());
+                    if (passwordField.getPassword() == null || passwordField.getPassword().length < 1) {
+                        for (int i = 0; i < fileSize; i++) {
+                            data[i] = dataIs.read();
+                        }
+                    } else {
+                        PasswordSequence sequence = new PasswordSequence(passwordField.getPassword());
+                        for (int i = 0; i < fileSize; i++) {
+                            data[i] = (byte) (sequence.read() ^ dataIs.read());
+                        }
                     }
                     dataIs.close();
-                    textArea.setText(new String(data, "UTF-8"));
+                    textArea.setText(new String(data, CHARSET));
                     update();
                 } catch (Exception e1) {
+                    fileLabel.setText("Error");
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (dataFile == null) {
+                    fileLabel.setText("The file is not loaded");
+                    return;
+                }
+                try {
+                    FileOutputStream os = new FileOutputStream(dataFile);
+                    byte[] data = textArea.getText().getBytes(CHARSET);
+                    PasswordSequence sequence = new PasswordSequence(passwordField.getPassword());
+                    for (byte b: data) {
+                        os.write(sequence.read() ^ b);
+                    }
+                    os.flush();
+                    os.close();
+                } catch (Exception e1) {
+                    fileLabel.setText("Error");
                     e1.printStackTrace();
                 }
             }
@@ -66,6 +95,11 @@ public class GuiFilePassword {
 
     private void update() {
         saveButton.setEnabled(dataFile != null);
-
+        loadButton.setEnabled(dataFile != null);
+        if (dataFile == null) {
+            fileLabel.setText("");
+        } else {
+            fileLabel.setText(dataFile.getName());
+        }
     }
 }
