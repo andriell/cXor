@@ -5,6 +5,6 @@ package andriell.cxor;
  */
 public class Main {
     public static void main(String[] args) {
-        new MainFrame().show();
+        new GuiFileFile().show();
     }
 }

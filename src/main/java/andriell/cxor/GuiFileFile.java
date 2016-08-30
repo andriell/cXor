@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Rybalko on 26.08.2016.
  */
-public class MainFrame {
+public class GuiFileFile {
     private JButton dataButton;
     private JButton keyButton;
     private JButton saveButton;
