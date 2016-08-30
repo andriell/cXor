@@ -23,6 +23,9 @@ public class MainFrame {
         guiFileFile.init();
         rootTabbedPane.addTab("File", guiFileFile.getRootPane());
 
+        GuiFilePassword guiFilePassword = new GuiFilePassword();
+        rootTabbedPane.addTab("Password", guiFilePassword.getRootPane());
+
         frame.setSize(400, 210);
         //frame.setResizable(false);
         frame.setVisible(true);
