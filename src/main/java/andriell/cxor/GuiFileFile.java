@@ -129,6 +129,8 @@ public class GuiFileFile {
                 }
                 saveOs.flush();
                 saveOs.close();
+                dataIs.close();
+                keyIs.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

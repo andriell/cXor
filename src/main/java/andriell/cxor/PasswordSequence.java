@@ -13,8 +13,20 @@ public class PasswordSequence {
     private int position = 0;
     private MessageDigest md;
 
+    public PasswordSequence(char[] password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        byte[] p = new byte[password.length];
+        for (int i = 0; i < password.length; i++) {
+            p[i] = (byte) password[i];
+        }
+        setPassword(p);
+    }
+
     public PasswordSequence(String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        this.password = password.getBytes();
+        setPassword(password.getBytes());
+    }
+
+    private void setPassword(byte[] password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        this.password = password;
         md = MessageDigest.getInstance("MD5");
         bytes = md.digest(this.password);
     }

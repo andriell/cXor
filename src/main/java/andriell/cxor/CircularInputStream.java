@@ -37,4 +37,10 @@ public class CircularInputStream {
             position = 0;
         }
     }
+
+    public void close() throws IOException {
+        is.close();
+        file = null;
+        is = null;
+    }
 }
