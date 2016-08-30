@@ -1,6 +1,8 @@
 package andriell.cxor;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -20,6 +22,7 @@ public class GuiFilePassword {
 
     private JFileChooser dataFileChooser;
     private File dataFile;
+    private char echoChar;
 
     private static final String CHARSET = "UTF-8";
 
@@ -29,6 +32,7 @@ public class GuiFilePassword {
 
     public void init() {
         dataFileChooser = new JFileChooser();
+        echoChar = passwordField.getEchoChar();
 
         fileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -67,6 +71,7 @@ public class GuiFilePassword {
                     fileLabel.setText("Error");
                     e1.printStackTrace();
                 }
+                saveButton.setEnabled(false);
             }
         });
 
@@ -74,6 +79,10 @@ public class GuiFilePassword {
             public void actionPerformed(ActionEvent e) {
                 if (dataFile == null) {
                     fileLabel.setText("The file is not loaded");
+                    return;
+                }
+                if (passwordField.getPassword() == null || passwordField.getPassword().length < 1) {
+                    fileLabel.setText("Empty password");
                     return;
                 }
                 try {
@@ -88,6 +97,34 @@ public class GuiFilePassword {
                 } catch (Exception e1) {
                     fileLabel.setText("Error");
                     e1.printStackTrace();
+                }
+                saveButton.setEnabled(false);
+            }
+        });
+
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                saveButton.setEnabled(true);
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                saveButton.setEnabled(true);
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                saveButton.setEnabled(true);
+            }
+        });
+
+        showButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (passwordField.getEchoChar() == echoChar) {
+                    passwordField.setEchoChar((char) 0);
+                    showButton.setText("Hide");
+
+                } else {
+                    passwordField.setEchoChar(echoChar);
+                    showButton.setText("Show");
                 }
             }
         });
