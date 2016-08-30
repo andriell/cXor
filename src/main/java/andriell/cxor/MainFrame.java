@@ -21,26 +21,26 @@ public class MainFrame {
 
         frame.setContentPane(rootPane);
 
-        GuiFileFile guiFileFile = new GuiFileFile();
-        guiFileFile.init();
-        rootTabbedPane.addTab("File", guiFileFile.getRootPane());
-
         GuiFilePassword guiFilePassword = new GuiFilePassword();
         guiFilePassword.init();
         rootTabbedPane.addTab("Password", guiFilePassword.getRootPane());
+
+        GuiFileFile guiFileFile = new GuiFileFile();
+        guiFileFile.init();
+        rootTabbedPane.addTab("File", guiFileFile.getRootPane());
 
         rootTabbedPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 int i = rootTabbedPane.getSelectedIndex();
                 if (i == 0) {
-                    frame.setSize(400, 210);
-                } else if (i == 1) {
                     frame.setSize(600, 400);
+                } else if (i == 1) {
+                    frame.setSize(400, 210);
                 }
             }
         });
 
-        frame.setSize(400, 210);
+        frame.setSize(600, 400);
         //frame.setResizable(false);
         frame.setVisible(true);
     }
