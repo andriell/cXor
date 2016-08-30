@@ -20,7 +20,7 @@ public class GuiFileFile {
     private JLabel keyLabel;
     private JTextField keyShiftTextField;
 
-    private JFrame frame;
+
     private JFileChooser dataFileChooser;
     private JFileChooser keyFileChooser;
     private JFileChooser saveFileChooser;
@@ -34,23 +34,14 @@ public class GuiFileFile {
     private static final String TEXT_SAVE = "Save";
     private static final String TEXT_STOP = "Stop";
 
-    public void show() {
-        frame = new JFrame("Crypto xor");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.setContentPane(rootPane);
-
-        frame.setSize(400, 180);
-        frame.setResizable(false);
-        frame.setVisible(true);
-
+    public void init() {
         dataFileChooser = new JFileChooser();
         keyFileChooser = new JFileChooser();
         saveFileChooser = new JFileChooser();
 
         dataButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int ret = dataFileChooser.showOpenDialog(frame);
+                int ret = dataFileChooser.showOpenDialog(rootPane);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     dataFile = dataFileChooser.getSelectedFile();
                     update();
@@ -60,7 +51,7 @@ public class GuiFileFile {
 
         keyButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int ret = keyFileChooser.showOpenDialog(frame);
+                int ret = keyFileChooser.showOpenDialog(rootPane);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     keyFile = keyFileChooser.getSelectedFile();
                     update();
@@ -73,7 +64,7 @@ public class GuiFileFile {
                 if (isRun) {
                     isRun = false;
                 } else {
-                    int ret = saveFileChooser.showSaveDialog(frame);
+                    int ret = saveFileChooser.showSaveDialog(rootPane);
                     if (ret == JFileChooser.APPROVE_OPTION) {
                         saveFile = saveFileChooser.getSelectedFile();
                         executor.execute(encrypt);
@@ -144,5 +135,9 @@ public class GuiFileFile {
             isRun = false;
             update();
         }
+    }
+
+    public JPanel getRootPane() {
+        return rootPane;
     }
 }
