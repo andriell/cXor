@@ -53,9 +53,14 @@ public class GuiFilePassword {
                     fileLabel.setText("The file is not loaded");
                     return;
                 }
+                long fileSizeL = dataFile.length();
+                if (fileSizeL > 1048576) {
+                    fileLabel.setText("The file is too large");
+                    return;
+                }
                 try {
                     CircularInputStream dataIs = new CircularInputStream(dataFile);
-                    int fileSize = (int) dataFile.length();
+                    int fileSize = (int) fileSizeL;
                     byte[] data = new byte[fileSize];
                     if (passwordField.getPassword() == null || passwordField.getPassword().length < 1) {
                         for (int i = 0; i < fileSize; i++) {
