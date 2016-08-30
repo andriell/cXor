@@ -16,23 +16,6 @@ public class TestPasswordSequence {
     public void test1() throws IOException, NoSuchAlgorithmException {
         PasswordSequence sequence = new PasswordSequence("test");
         byte[] bytes = {
-                (byte) 0x09,
-                (byte) 0x8f,
-                (byte) 0x6b,
-                (byte) 0xcd,
-                (byte) 0x46,
-                (byte) 0x21,
-                (byte) 0xd3,
-                (byte) 0x73,
-                (byte) 0xca,
-                (byte) 0xde,
-                (byte) 0x4e,
-                (byte) 0x83,
-                (byte) 0x26,
-                (byte) 0x27,
-                (byte) 0xb4,
-                (byte) 0xf6,
-
                 (byte) 0xb6,
                 (byte) 0xf1,
                 (byte) 0x20,

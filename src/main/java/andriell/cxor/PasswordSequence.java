@@ -28,7 +28,7 @@ public class PasswordSequence {
     private void setPassword(byte[] password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         this.password = password;
         md = MessageDigest.getInstance("MD5");
-        bytes = md.digest(this.password);
+        bytes = md.digest(mergeBytes(this.password, md.digest(this.password)));
     }
 
     public byte read() {
