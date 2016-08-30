@@ -5,6 +5,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.*;
 
 /**
@@ -127,16 +129,27 @@ public class GuiFilePassword {
         passwordField.getDocument().addDocumentListener(documentListener);
         textArea.getDocument().addDocumentListener(documentListener);
 
-        showButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (passwordField.getEchoChar() == echoChar) {
-                    passwordField.setEchoChar((char) 0);
-                    showButton.setText("Hide");
+        showButton.addMouseListener(new MouseListener() {
+            public void mouseClicked(MouseEvent e) {
 
-                } else {
-                    passwordField.setEchoChar(echoChar);
-                    showButton.setText("Show");
-                }
+            }
+
+            public void mousePressed(MouseEvent e) {
+                passwordField.setEchoChar((char) 0);
+                showButton.setText("Hide");
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                passwordField.setEchoChar(echoChar);
+                showButton.setText("Show");
+            }
+
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            public void mouseExited(MouseEvent e) {
+
             }
         });
         update();
