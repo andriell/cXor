@@ -19,6 +19,7 @@ public class GuiFilePassword {
     private JButton saveButton;
     private JPanel rootPane;
     private JButton loadButton;
+    private JButton clearButton;
 
     private JFileChooser dataFileChooser;
     private File dataFile;
@@ -66,12 +67,21 @@ public class GuiFilePassword {
                     }
                     dataIs.close();
                     textArea.setText(new String(data, CHARSET));
-                    update();
                 } catch (Exception e1) {
                     fileLabel.setText("Error");
                     e1.printStackTrace();
                 }
+                update();
                 saveButton.setEnabled(false);
+            }
+        });
+
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                passwordField.setText("");
+                textArea.setText("");
+                dataFile = null;
+                update();
             }
         });
 
@@ -98,23 +108,24 @@ public class GuiFilePassword {
                     fileLabel.setText("Error");
                     e1.printStackTrace();
                 }
+                update();
                 saveButton.setEnabled(false);
             }
         });
 
-        textArea.getDocument().addDocumentListener(new DocumentListener() {
+        DocumentListener documentListener = new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
-                saveButton.setEnabled(true);
+                update();
             }
-
             public void removeUpdate(DocumentEvent e) {
-                saveButton.setEnabled(true);
+                update();
             }
-
             public void changedUpdate(DocumentEvent e) {
-                saveButton.setEnabled(true);
+                update();
             }
-        });
+        };
+        passwordField.getDocument().addDocumentListener(documentListener);
+        textArea.getDocument().addDocumentListener(documentListener);
 
         showButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -128,13 +139,15 @@ public class GuiFilePassword {
                 }
             }
         });
+        update();
     }
 
     private void update() {
         saveButton.setEnabled(dataFile != null);
         loadButton.setEnabled(dataFile != null);
+        clearButton.setEnabled(dataFile != null);
         if (dataFile == null) {
-            fileLabel.setText("");
+            fileLabel.setText("Not set");
         } else {
             fileLabel.setText(dataFile.getName());
         }

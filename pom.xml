@@ -6,7 +6,7 @@
 
     <groupId>cXor</groupId>
     <artifactId>cXor</artifactId>
-    <version>1.0</version>
+    <version>1.01</version>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>

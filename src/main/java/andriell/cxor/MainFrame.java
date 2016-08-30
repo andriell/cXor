@@ -1,6 +1,8 @@
 package andriell.cxor;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,6 +28,17 @@ public class MainFrame {
         GuiFilePassword guiFilePassword = new GuiFilePassword();
         guiFilePassword.init();
         rootTabbedPane.addTab("Password", guiFilePassword.getRootPane());
+
+        rootTabbedPane.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                int i = rootTabbedPane.getSelectedIndex();
+                if (i == 0) {
+                    frame.setSize(400, 210);
+                } else if (i == 1) {
+                    frame.setSize(600, 400);
+                }
+            }
+        });
 
         frame.setSize(400, 210);
         //frame.setResizable(false);
