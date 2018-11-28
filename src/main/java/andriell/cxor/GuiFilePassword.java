@@ -3,12 +3,12 @@ package andriell.cxor;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
-import java.util.prefs.Preferences;
 
 /**
  * Created by Rybalko on 30.08.2016.
@@ -26,7 +26,6 @@ public class GuiFilePassword {
     private JButton loadButton;
     private JButton clearButton;
 
-    private Preferences prefs;
     private JFileChooser dataFileChooser;
     private File dataFile;
     private char echoChar;
@@ -38,9 +37,11 @@ public class GuiFilePassword {
     }
 
     public void init() {
-        prefs = Preferences.userRoot().node(getClass().getName());
         String defaultPath = new File(".").getAbsolutePath();
-        dataFileChooser = new JFileChooser(prefs.get(LAST_USED_FOLDER_DATA, defaultPath));
+
+        dataFileChooser = new JFileChooser(Preferences.get(LAST_USED_FOLDER_DATA, defaultPath));
+        Dimension dimension = (Dimension) Preferences.getSerializable(Preferences.LAST_USED_DIMENSION, dataFileChooser.getPreferredSize());
+        dataFileChooser.setPreferredSize(dimension);
         echoChar = passwordField.getEchoChar();
 
         fileButton.addActionListener(new ActionListener() {
@@ -48,9 +49,11 @@ public class GuiFilePassword {
                 int ret = dataFileChooser.showOpenDialog(rootPane);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     dataFile = dataFileChooser.getSelectedFile();
-                    prefs.put(LAST_USED_FOLDER_DATA, dataFileChooser.getSelectedFile().getParent());
-                    update();
+                    Preferences.put(LAST_USED_FOLDER_DATA, dataFileChooser.getSelectedFile().getParent());
+                      update();
                 }
+                Preferences.putSerializable(Preferences.LAST_USED_DIMENSION, dataFileChooser.getSize());
+                dataFileChooser.setPreferredSize(dataFileChooser.getSize());
             }
         });
 

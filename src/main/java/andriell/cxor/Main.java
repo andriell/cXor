@@ -657,71 +657,15 @@ public class Main {
         // 	windowBorder	javax.swing.plaf.ColorUIResource[r=238,g=238,b=238]
         // 	windowText	sun.swing.PrintColorUIResource[r=51,g=51,b=51]
 
-        Font f = new Font("Segoe UI", Font.PLAIN, 12);
-        UIManager.put("Button.font", f);
-        UIManager.put("ToggleButton.font", f);
-        UIManager.put("RadioButton.font", f);
-        UIManager.put("CheckBox.font", f);
-        UIManager.put("ColorChooser.font", f);
-        UIManager.put("ComboBox.font", f);
-        UIManager.put("Label.font", f);
-        UIManager.put("List.font", f);
-        UIManager.put("MenuBar.font", f);
-        UIManager.put("MenuItem.font", f);
-        UIManager.put("RadioButtonMenuItem.font", f);
-        UIManager.put("CheckBoxMenuItem.font", f);
-        UIManager.put("Menu.font", f);
-        UIManager.put("PopupMenu.font", f);
-        UIManager.put("OptionPane.font", f);
-        UIManager.put("Panel.font", f);
-        UIManager.put("ProgressBar.font", f);
-        UIManager.put("ScrollPane.font", f);
-        UIManager.put("Viewport.font", f);
-        UIManager.put("Table.font", f);
-        UIManager.put("TableHeader.font", f);
-        UIManager.put("TextField.font", f);
-        UIManager.put("PasswordField.font", f);
-        UIManager.put("TextArea.font", f);
-        UIManager.put("TextPane.font", f);
-        UIManager.put("EditorPane.font", f);
-        UIManager.put("TitledBorder.font", f);
-        UIManager.put("ToolBar.font", f);
-        UIManager.put("ToolTip.font", f);
-        UIManager.put("Tree.font", f);
-
-        Color white = Color.white;
-        Color black = Color.black;
-        Color gray = Color.gray;
-
-        UIManager.put("control", white); // Цвет кнопок на скроле
-        //<editor-fold desc="Button">
-        UIManager.put("Button.background", white);
-        UIManager.put("Button.focus", white); // Цвет рамки вокруг нажатой кнопки
-        UIManager.put("Button.select", white); // Цвет кнопки вовремя нажатия
-        //</editor-fold>
-        UIManager.put("CheckBox.background", white);
-        //<editor-fold desc="CheckBox">
-        UIManager.put("ComboBox.background", white);
-        UIManager.put("ComboBox.buttonBackground", white);
-        //</editor-fold>
-        UIManager.put("Panel.background", white);
-        //<editor-fold desc="ScrollBar">
-        UIManager.put("ScrollBar.background", white);
-        UIManager.put("ScrollBar.shadow", white); // Внутренний контур полосы прокрутки
-        UIManager.put("ScrollBar.thumbHighlight", white); // Тень на бегунке
-        UIManager.put("ScrollBar.thumbShadow", gray); // Внешний контур бегунка
-        UIManager.put("ScrollBar.darkShadow", gray); // Внешний Контур полосы прокрутки
-        UIManager.put("ScrollBar.gradient", Arrays.asList(0.0, 0.0, white, white, white)); // Центральный градиент бегунка
+        Color color227 = new Color(227,227,227);
+        Color color238 = new Color(238,238,238);
+        UIManager.put("Button.background", color227);
+        UIManager.put("TabbedPane.contentAreaColor", color238);
+        UIManager.put("TabbedPane.selected", color238);
+        UIManager.put("ScrollBar.gradient", Arrays.asList(0.0, 0.0, Color.white, Color.white, Color.white));
+        UIManager.put("ScrollBar.shadow", color238);
+        UIManager.put("ScrollBar.thumbHighlight", color238);
         UIManager.put("ScrollBar.width", 14);
-        UIManager.put("ScrollPane.background", white); // Бекграунд скрол панели
-        //</editor-fold>
-        //<editor-fold desc="TabbedPane">
-        UIManager.put("TabbedPane.font", f);
-        UIManager.put("TabbedPane.selected", white); // Бекграунд выделенного таба
-        UIManager.put("TabbedPane.contentAreaColor", white); // Средняя часть бордюра выделенного таба
-        UIManager.put("TabbedPane.borderHightlightColor", gray); // Внешний верхний контур таба
-        UIManager.put("TabbedPane.darkShadow", gray); // Внешний нижний контур таба
-        //</editor-fold>
     }
 
     public static void main(String[] args) {
