@@ -8,11 +8,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
+import java.util.prefs.Preferences;
 
 /**
  * Created by Rybalko on 30.08.2016.
  */
 public class GuiFilePassword {
+    private static String LAST_USED_FOLDER_DATA = "last_used_folder_data";
+
     private JButton fileButton;
     private JButton showButton;
     private JPasswordField passwordField;
@@ -23,6 +26,7 @@ public class GuiFilePassword {
     private JButton loadButton;
     private JButton clearButton;
 
+    private Preferences prefs;
     private JFileChooser dataFileChooser;
     private File dataFile;
     private char echoChar;
@@ -34,7 +38,9 @@ public class GuiFilePassword {
     }
 
     public void init() {
-        dataFileChooser = new JFileChooser();
+        prefs = Preferences.userRoot().node(getClass().getName());
+        String defaultPath = new File(".").getAbsolutePath();
+        dataFileChooser = new JFileChooser(prefs.get(LAST_USED_FOLDER_DATA, defaultPath));
         echoChar = passwordField.getEchoChar();
 
         fileButton.addActionListener(new ActionListener() {
@@ -42,6 +48,7 @@ public class GuiFilePassword {
                 int ret = dataFileChooser.showOpenDialog(rootPane);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     dataFile = dataFileChooser.getSelectedFile();
+                    prefs.put(LAST_USED_FOLDER_DATA, dataFileChooser.getSelectedFile().getParent());
                     update();
                 }
             }

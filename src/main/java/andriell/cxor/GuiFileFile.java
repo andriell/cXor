@@ -6,11 +6,16 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.prefs.Preferences;
 
 /**
  * Created by Rybalko on 26.08.2016.
  */
 public class GuiFileFile {
+    private static String LAST_USED_FOLDER_DATA = "last_used_folder_data";
+    private static String LAST_USED_FOLDER_KEY = "last_used_folder_key";
+    private static String LAST_USED_FOLDER_SAVE = "last_used_folder_save";
+
     private JButton dataButton;
     private JButton keyButton;
     private JButton saveButton;
@@ -20,7 +25,7 @@ public class GuiFileFile {
     private JLabel keyLabel;
     private JTextField keyShiftTextField;
 
-
+    private Preferences prefs;
     private JFileChooser dataFileChooser;
     private JFileChooser keyFileChooser;
     private JFileChooser saveFileChooser;
@@ -35,15 +40,18 @@ public class GuiFileFile {
     private static final String TEXT_STOP = "Stop";
 
     public void init() {
-        dataFileChooser = new JFileChooser();
-        keyFileChooser = new JFileChooser();
-        saveFileChooser = new JFileChooser();
+        prefs = Preferences.userRoot().node(getClass().getName());
+        String defaultPath = new File(".").getAbsolutePath();
+        dataFileChooser = new JFileChooser(prefs.get(LAST_USED_FOLDER_DATA, defaultPath));
+        keyFileChooser = new JFileChooser(prefs.get(LAST_USED_FOLDER_KEY, defaultPath));
+        saveFileChooser = new JFileChooser(prefs.get(LAST_USED_FOLDER_SAVE, defaultPath));
 
         dataButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int ret = dataFileChooser.showOpenDialog(rootPane);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     dataFile = dataFileChooser.getSelectedFile();
+                    prefs.put(LAST_USED_FOLDER_DATA, dataFileChooser.getSelectedFile().getParent());
                     update();
                 }
             }
@@ -54,6 +62,7 @@ public class GuiFileFile {
                 int ret = keyFileChooser.showOpenDialog(rootPane);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     keyFile = keyFileChooser.getSelectedFile();
+                    prefs.put(LAST_USED_FOLDER_KEY, keyFileChooser.getSelectedFile().getParent());
                     update();
                 }
             }
@@ -67,6 +76,7 @@ public class GuiFileFile {
                     int ret = saveFileChooser.showSaveDialog(rootPane);
                     if (ret == JFileChooser.APPROVE_OPTION) {
                         saveFile = saveFileChooser.getSelectedFile();
+                        prefs.put(LAST_USED_FOLDER_SAVE, saveFileChooser.getSelectedFile().getParent());
                         executor.execute(encrypt);
                     }
                 }
