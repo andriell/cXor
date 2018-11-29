@@ -6,7 +6,7 @@
 
     <groupId>com.andriell</groupId>
     <artifactId>cXor</artifactId>
-    <version>1.04</version>
+    <version>1.05</version>
 
     <dependencies>
         <dependency>
@@ -19,11 +19,6 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.8.1</version>
         </dependency>
     </dependencies>
 

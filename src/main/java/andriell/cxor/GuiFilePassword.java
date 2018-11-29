@@ -14,8 +14,6 @@ import java.io.*;
  * Created by Rybalko on 30.08.2016.
  */
 public class GuiFilePassword {
-    private static String LAST_USED_FOLDER_DATA = "last_used_folder_data";
-
     private JButton fileButton;
     private JButton showButton;
     private JPasswordField passwordField;
@@ -39,17 +37,21 @@ public class GuiFilePassword {
     public void init() {
         String defaultPath = new File(".").getAbsolutePath();
 
-        dataFileChooser = new JFileChooser(Preferences.get(LAST_USED_FOLDER_DATA, defaultPath));
+        dataFileChooser = new JFileChooser(Preferences.get(Preferences.LAST_USED_FOLDER_DATA_PASS, defaultPath));
         Dimension dimension = (Dimension) Preferences.getSerializable(Preferences.LAST_USED_DIMENSION, dataFileChooser.getPreferredSize());
         dataFileChooser.setPreferredSize(dimension);
         echoChar = passwordField.getEchoChar();
+
+        if (dataFile != null && dataFile.isFile()) {
+            dataFileChooser.setSelectedFile(dataFile);
+        }
 
         fileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int ret = dataFileChooser.showOpenDialog(rootPane);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     dataFile = dataFileChooser.getSelectedFile();
-                    Preferences.put(LAST_USED_FOLDER_DATA, dataFileChooser.getSelectedFile().getParent());
+                    Preferences.put(Preferences.LAST_USED_FOLDER_DATA_PASS, dataFileChooser.getSelectedFile().getParent());
                       update();
                 }
                 Preferences.putSerializable(Preferences.LAST_USED_DIMENSION, dataFileChooser.getSize());
@@ -179,5 +181,13 @@ public class GuiFilePassword {
         } else {
             fileLabel.setText(dataFile.getName());
         }
+    }
+
+    public void setDataFile(File dataFile) {
+        this.dataFile = dataFile;
+    }
+
+    public File getDataFile() {
+        return dataFile;
     }
 }

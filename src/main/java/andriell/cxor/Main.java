@@ -2,6 +2,7 @@ package andriell.cxor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.Arrays;
 
 /**
@@ -670,6 +671,12 @@ public class Main {
 
     public static void main(String[] args) {
         setStyle();
-        new MainFrame().init();
+        MainFrame frame = new MainFrame();
+        for (String a:args) {
+            if (a != null && a.indexOf("--file=") == 0) {
+                frame.setDataFile(new File(a.substring(7)));
+            }
+        }
+        frame.init();
     }
 }

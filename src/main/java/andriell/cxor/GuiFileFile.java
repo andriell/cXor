@@ -1,7 +1,5 @@
 package andriell.cxor;
 
-import org.apache.commons.lang3.SerializationUtils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
