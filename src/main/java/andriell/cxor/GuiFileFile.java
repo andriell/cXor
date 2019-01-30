@@ -21,6 +21,8 @@ public class GuiFileFile {
     private JLabel dataLabel;
     private JLabel keyLabel;
     private JTextField keyShiftTextField;
+    private JButton calcButton;
+    private JPanel spectrPane;
 
     private JFileChooser dataFileChooser;
     private JFileChooser keyFileChooser;
