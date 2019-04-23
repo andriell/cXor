@@ -22,7 +22,7 @@ public class GuiFileFile {
     private JLabel keyLabel;
     private JTextField keyShiftTextField;
     private JButton calcButton;
-    private JPanel spectrPane;
+    private JPanel spectrumPanel;
 
     private JFileChooser dataFileChooser;
     private JFileChooser keyFileChooser;
@@ -31,6 +31,7 @@ public class GuiFileFile {
     private File keyFile;
     private File saveFile;
     private Encrypt encrypt = new Encrypt();
+    private Spectrum spectrum = new Spectrum();
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean isRun = false;
 
@@ -90,6 +91,13 @@ public class GuiFileFile {
                 update();
             }
         });
+
+        calcButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                executor.execute(spectrum);
+            }
+        });
         update();
     }
 
@@ -101,8 +109,10 @@ public class GuiFileFile {
         }
         if (keyFile == null) {
             keyLabel.setText("Not set");
+            calcButton.setEnabled(false);
         } else {
             keyLabel.setText(keyFile.getName());
+            calcButton.setEnabled(!isRun);
         }
         saveButton.setEnabled(dataFile != null && keyFile != null);
         if (isRun) {
@@ -115,6 +125,10 @@ public class GuiFileFile {
         dataButton.setEnabled(!isRun);
         keyButton.setEnabled(!isRun);
         keyShiftTextField.setEnabled(!isRun);
+    }
+
+    private void createUIComponents() {
+        spectrumPanel = new SpectrumPanel();
     }
 
     private class Encrypt implements Runnable {
@@ -153,6 +167,46 @@ public class GuiFileFile {
             }
             isRun = false;
             update();
+        }
+    }
+
+    private class Spectrum implements Runnable {
+        public void run() {
+            if (!(keyFile != null && keyFile.isFile())) {
+                return;
+            }
+            isRun = true;
+            update();
+            try {
+                long spectrum[] = new long[256];
+                for (int i = 0; i < 256; i++) {
+                    spectrum[i] = (long) 0;
+                }
+                BufferedInputStream keyIs = new BufferedInputStream(new FileInputStream(keyFile));
+                int keySize = (int) keyFile.length();
+                saveProgressBar.setMinimum(0);
+                saveProgressBar.setMaximum(keySize);
+                saveProgressBar.setValue(0);
+                for (int i = 0; i < keySize; i++) {
+                    if (!isRun) {
+                        break;
+                    }
+                    int v = keyIs.read();
+                    if (v >=0 && v <= 255) {
+                        spectrum[v]++;
+                    }
+                    saveProgressBar.setValue(i);
+                    saveProgressBar.setString((Math.round(i * 1000.0f / keySize) / 10.0f) + "%");
+                }
+                keyIs.close();
+                ((SpectrumPanel) spectrumPanel).setSpectrum(spectrum);
+                spectrumPanel.repaint();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            isRun = false;
+            update();
+
         }
     }
 
