@@ -25,8 +25,8 @@ public class SpectrumPanel extends JPanel {
     }
 
     public Dimension getPreferredSize() {
-        int maxWidth = rootPanel.getWidth() - this.getX();
-        int maxHeight = rootPanel.getHeight() - this.getY();
+        int maxWidth = rootPanel.getWidth() - this.getX() - 10;
+        int maxHeight = rootPanel.getHeight() - this.getY() - 10;
         int sW = maxWidth / 258;
         int sH = maxHeight / 102;
         size = Math.max(1, Math.min(sW, sH));
