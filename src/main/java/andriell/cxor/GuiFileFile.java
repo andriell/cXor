@@ -116,7 +116,7 @@ public class GuiFileFile {
             keyLabel.setText(keyFile.getName());
             calcButton.setEnabled(!isRun);
         }
-        saveButton.setEnabled(dataFile != null && keyFile != null);
+        saveButton.setEnabled((dataFile != null && keyFile != null) || isRun);
         if (isRun) {
             saveButton.setText(TEXT_STOP);
         } else {
@@ -201,14 +201,15 @@ public class GuiFileFile {
                     saveProgressBar.setString((Math.round(i * 1000.0f / keySize) / 10.0f) + "%");
                 }
                 keyIs.close();
-                ((SpectrumPanel) spectrumPanel).setSpectrum(spectrum);
+                if (isRun) {
+                    ((SpectrumPanel) spectrumPanel).setSpectrum(spectrum);
+                }
                 spectrumPanel.repaint();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             isRun = false;
             update();
-
         }
     }
 
