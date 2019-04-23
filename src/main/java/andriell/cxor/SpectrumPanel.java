@@ -6,6 +6,15 @@ import java.awt.*;
 public class SpectrumPanel extends JPanel {
     private long spectrum[] = null;
     private int size = 2;
+    private JPanel rootPanel;
+
+    public JPanel getRootPanel() {
+        return rootPanel;
+    }
+
+    public void setRootPanel(JPanel rootPanel) {
+        this.rootPanel = rootPanel;
+    }
 
     public long[] getSpectrum() {
         return spectrum;
@@ -16,6 +25,11 @@ public class SpectrumPanel extends JPanel {
     }
 
     public Dimension getPreferredSize() {
+        int maxWidth = rootPanel.getWidth() - this.getX();
+        int maxHeight = rootPanel.getHeight() - this.getY();
+        int sW = maxWidth / 258;
+        int sH = maxHeight / 102;
+        size = Math.max(1, Math.min(sW, sH));
         return new Dimension(258 * size, 102 * size);
     }
 
@@ -36,11 +50,11 @@ public class SpectrumPanel extends JPanel {
         }
         for (int i = 0; i < 256; i++) {
             int p = (int) (((double) spectrum[i] / (double) spectrumMax) * 100);
-            System.out.print(spectrum[i]);
-            System.out.print(" / ");
-            System.out.print(spectrum[i]);
-            System.out.print(" = ");
-            System.out.println(p);
+            // System.out.print(spectrum[i]);
+            // System.out.print(" / ");
+            // System.out.print(spectrum[i]);
+            // System.out.print(" = ");
+            // System.out.println(p);
             g.fillRect ((i + 1) * size, size, size, (100 - p) * size);
         }
     }

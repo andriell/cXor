@@ -98,6 +98,8 @@ public class GuiFileFile {
                 executor.execute(spectrum);
             }
         });
+
+        ((SpectrumPanel)spectrumPanel).setRootPanel(rootPane);
         update();
     }
 
