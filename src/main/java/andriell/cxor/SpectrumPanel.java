@@ -5,6 +5,7 @@ import java.awt.*;
 
 public class SpectrumPanel extends JPanel {
     private long spectrum[] = null;
+    private int size = 2;
 
     public long[] getSpectrum() {
         return spectrum;
@@ -15,20 +16,20 @@ public class SpectrumPanel extends JPanel {
     }
 
     public Dimension getPreferredSize() {
-        return new Dimension(258, 101);
+        return new Dimension(258 * size, 102 * size);
     }
 
     protected void paintComponent(Graphics g) {
         g.setColor(Color.black);
-        g.drawRect(0, 0, 257, 101);
+        g.fillRect(0, 0, 258 * size, 102 * size);
         if (spectrum == null || spectrum.length != 256) {
             g.setColor(Color.white);
-            g.fillRect(1, 1, 256, 100);
+            g.fillRect(size, size, 256 * size, 100 * size);
             return;
         }
-        g.setColor(Color.red);
-        g.fillRect(1, 1, 256, 100);
         g.setColor(Color.green);
+        g.fillRect(size, size, 256 * size, 100 * size);
+        g.setColor(Color.red);
         long spectrumMax = 0;
         for (int i = 0; i < 256; i++) {
             spectrumMax = Math.max(spectrumMax, spectrum[i]);
@@ -40,7 +41,7 @@ public class SpectrumPanel extends JPanel {
             System.out.print(spectrum[i]);
             System.out.print(" = ");
             System.out.println(p);
-            g.drawLine (i + 1, 100, i + 1, 101 - p);
+            g.fillRect ((i + 1) * size, size, size, (100 - p) * size);
         }
     }
 }
