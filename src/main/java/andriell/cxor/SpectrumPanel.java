@@ -5,7 +5,8 @@ import java.awt.*;
 
 public class SpectrumPanel extends JPanel {
     private long spectrum[] = null;
-    private int size = 2;
+    private int sizeH = 2;
+    private int sizeV = 2;
     private JPanel rootPanel;
     public static Color COLOR_BLACK;
     public static Color COLOR_RED;
@@ -34,24 +35,25 @@ public class SpectrumPanel extends JPanel {
     }
 
     public Dimension getPreferredSize() {
-        int maxWidth = rootPanel.getWidth() - this.getX() - 10;
-        int maxHeight = rootPanel.getHeight() - this.getY() - 10;
+        int maxWidth = rootPanel.getWidth() - this.getX() - 5;
+        int maxHeight = rootPanel.getHeight() - this.getY() - 5;
         int sW = maxWidth / 258;
         int sH = maxHeight / 102;
-        size = Math.max(1, Math.min(sW, sH));
-        return new Dimension(258 * size, 102 * size);
+        sizeH = Math.max(1, sH);
+        sizeV = Math.max(1, sW);
+        return new Dimension(258 * sizeV, 102 * sizeH);
     }
 
     protected void paintComponent(Graphics g) {
         g.setColor(COLOR_BLACK);
-        g.fillRect(0, 0, 258 * size, 102 * size);
+        g.fillRect(0, 0, 258 * sizeV, 102 * sizeH);
         if (spectrum == null || spectrum.length != 256) {
             g.setColor(Color.white);
-            g.fillRect(size, size, 256 * size, 100 * size);
+            g.fillRect(sizeV, sizeH, 256 * sizeV, 100 * sizeH);
             return;
         }
         g.setColor(COLOR_GREEN);
-        g.fillRect(size, size, 256 * size, 100 * size);
+        g.fillRect(sizeV, sizeH, 256 * sizeV, 100 * sizeH);
         g.setColor(COLOR_RED);
         long spectrumMax = 0;
         for (int i = 0; i < 256; i++) {
@@ -64,7 +66,7 @@ public class SpectrumPanel extends JPanel {
             // System.out.print(spectrum[i]);
             // System.out.print(" = ");
             // System.out.println(p);
-            g.fillRect ((i + 1) * size, size, size, (100 - p) * size);
+            g.fillRect ((i + 1) * sizeV, sizeH, sizeV, (100 - p) * sizeH);
         }
     }
 }
