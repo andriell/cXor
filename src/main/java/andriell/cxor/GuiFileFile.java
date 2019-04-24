@@ -203,7 +203,7 @@ public class GuiFileFile {
                         break;
                     }
                     if (skipNullBytesCheckBox.isSelected()) {
-                        saveOs.write(dataIs.readNN() ^ keyIs.read());
+                        saveOs.write(dataIs.read() ^ keyIs.readNN());
                     } else {
                         saveOs.write(dataIs.read() ^ keyIs.read());
                     }
