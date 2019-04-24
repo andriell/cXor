@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,6 +25,7 @@ public class GuiFileFile {
     private JTextField keyShiftTextField;
     private JButton calcButton;
     private JPanel spectrumPanel;
+    private JCheckBox skipNullBytesCheckBox;
 
     private JFileChooser dataFileChooser;
     private JFileChooser keyFileChooser;
@@ -100,6 +103,11 @@ public class GuiFileFile {
         });
 
         ((SpectrumPanel)spectrumPanel).setRootPanel(rootPane);
+
+        //main method
+        Timer t1 = new Timer();
+        t1.schedule(new ProgressBarTimerTask(), 0,1000);
+
         update();
     }
 
@@ -107,13 +115,13 @@ public class GuiFileFile {
         if (dataFile == null) {
             dataLabel.setText("Not set");
         } else {
-            dataLabel.setText(dataFile.getName());
+            dataLabel.setText(dataFile.getName() + " [" + StringHelper.fileSize(dataFile.length()) + "]");
         }
         if (keyFile == null) {
             keyLabel.setText("Not set");
             calcButton.setEnabled(false);
         } else {
-            keyLabel.setText(keyFile.getName());
+            keyLabel.setText(keyFile.getName() + " [" + StringHelper.fileSize(keyFile.length()) + "]");
             calcButton.setEnabled(!isRun);
         }
         saveButton.setEnabled((dataFile != null && keyFile != null) || isRun);
@@ -122,15 +130,29 @@ public class GuiFileFile {
         } else {
             saveButton.setText(TEXT_SAVE);
             saveProgressBar.setValue(0);
-            saveProgressBar.setString("0%");
         }
         dataButton.setEnabled(!isRun);
         keyButton.setEnabled(!isRun);
         keyShiftTextField.setEnabled(!isRun);
+        skipNullBytesCheckBox.setEnabled(!isRun);
     }
 
     private void createUIComponents() {
         spectrumPanel = new SpectrumPanel();
+    }
+
+    private class ProgressBarTimerTask extends TimerTask {
+        private int previousValue = 0;
+        public void run() {
+            int v = saveProgressBar.getValue();
+            String s = "";
+            if (isRun && v > previousValue) {
+                s = (Math.round(saveProgressBar.getValue() * 1000.0f / saveProgressBar.getMaximum()) / 10.0f)
+                        + "% " + StringHelper.fileSize(v - previousValue) + "/s";
+            }
+            saveProgressBar.setString(s);
+            previousValue = saveProgressBar.getValue();
+        }
     }
 
     private class Encrypt implements Runnable {
@@ -156,9 +178,12 @@ public class GuiFileFile {
                     if (!isRun) {
                         break;
                     }
-                    saveOs.write(dataIs.read() ^ keyIs.read());
+                    if (skipNullBytesCheckBox.isSelected()) {
+                        saveOs.write(dataIs.readNN() ^ keyIs.read());
+                    } else {
+                        saveOs.write(dataIs.read() ^ keyIs.read());
+                    }
                     saveProgressBar.setValue(i);
-                    saveProgressBar.setString((Math.round(i * 1000.0f / dataSize) / 10.0f) + "%");
                 }
                 saveOs.flush();
                 saveOs.close();
@@ -198,10 +223,12 @@ public class GuiFileFile {
                         spectrum[v]++;
                     }
                     saveProgressBar.setValue(i);
-                    saveProgressBar.setString((Math.round(i * 1000.0f / keySize) / 10.0f) + "%");
                 }
                 keyIs.close();
                 if (isRun) {
+                    if (skipNullBytesCheckBox.isSelected()) {
+                        spectrum[0] = 0;
+                    }
                     ((SpectrumPanel) spectrumPanel).setSpectrum(spectrum);
                 }
                 spectrumPanel.repaint();

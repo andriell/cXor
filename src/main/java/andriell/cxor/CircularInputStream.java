@@ -24,6 +24,16 @@ public class CircularInputStream {
         return (byte) is.read();
     }
 
+    public byte readNN() throws Exception {
+        for (long l = 0; l < fileSize; l++) {
+            byte b = read();
+            if (b != 0x0) {
+                return b;
+            }
+        }
+        throw new Exception("File have only null bytes");
+    }
+
     public void skip(long i) throws IOException {
         for (; i > 0; i--) {
             read();
