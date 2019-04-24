@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,10 +27,12 @@ public class GuiFileFile {
     private JButton calcButton;
     private JPanel spectrumPanel;
     private JCheckBox skipNullBytesCheckBox;
+    private JButton saveSpectrumButton;
 
     private JFileChooser dataFileChooser;
     private JFileChooser keyFileChooser;
     private JFileChooser saveFileChooser;
+    private JFileChooser saveSpectrumChooser;
     private File dataFile;
     private File keyFile;
     private File saveFile;
@@ -50,6 +53,8 @@ public class GuiFileFile {
         keyFileChooser.setPreferredSize(dimension);
         saveFileChooser = new JFileChooser(Preferences.get(Preferences.LAST_USED_FOLDER_SAVE, defaultPath));
         saveFileChooser.setPreferredSize(dimension);
+        saveSpectrumChooser = new JFileChooser(Preferences.get(Preferences.LAST_USED_FOLDER_KEY, defaultPath));
+        saveSpectrumChooser.setPreferredSize(dimension);
 
         dataButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -95,6 +100,24 @@ public class GuiFileFile {
             }
         });
 
+        saveSpectrumButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveSpectrumChooser.setSelectedFile(new File(keyFile.getPath() + ".png"));
+                int ret = saveSpectrumChooser.showSaveDialog(rootPane);
+                if (ret == JFileChooser.APPROVE_OPTION) {
+                    File saveSpectrumFile = saveSpectrumChooser.getSelectedFile();
+                    try {
+                        ((SpectrumPanel)spectrumPanel).saveToFile(saveSpectrumFile);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                Preferences.putSerializable(Preferences.LAST_USED_DIMENSION, saveSpectrumChooser.getSize());
+                saveSpectrumChooser.setPreferredSize(saveSpectrumChooser.getSize());
+                update();
+            }
+        });
+
         calcButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -125,6 +148,7 @@ public class GuiFileFile {
             calcButton.setEnabled(!isRun);
         }
         saveButton.setEnabled((dataFile != null && keyFile != null) || isRun);
+        saveSpectrumButton.setEnabled(!((SpectrumPanel)spectrumPanel).isEmpty() && !isRun);
         if (isRun) {
             saveButton.setText(TEXT_STOP);
         } else {

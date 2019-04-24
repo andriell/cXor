@@ -6,7 +6,7 @@
 
     <groupId>com.andriell</groupId>
     <artifactId>cXor</artifactId>
-    <version>1.06</version>
+    <version>1.07</version>
 
     <dependencies>
         <dependency>
