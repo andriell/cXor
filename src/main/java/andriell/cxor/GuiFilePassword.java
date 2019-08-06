@@ -145,6 +145,7 @@ public class GuiFilePassword {
         };
         passwordField.getDocument().addDocumentListener(documentListener);
         textArea.getDocument().addDocumentListener(documentListener);
+        DefaultContextMenu.addContextMenu(textArea);
 
         showButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
