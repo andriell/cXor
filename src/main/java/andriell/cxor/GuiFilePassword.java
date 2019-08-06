@@ -23,10 +23,13 @@ public class GuiFilePassword {
     private JPanel rootPane;
     private JButton loadButton;
     private JButton clearButton;
+    private JButton showDataButton;
 
     private JFileChooser dataFileChooser;
     private File dataFile;
     private char echoChar;
+    private boolean isShowData = false;
+    private HiddenString hiddenString;
 
     private static final String CHARSET = "UTF-8";
 
@@ -85,7 +88,12 @@ public class GuiFilePassword {
                         }
                     }
                     dataIs.close();
-                    textArea.setText(new String(data, CHARSET));
+                    hiddenString = new HiddenString(data);
+                    if (isShowData) {
+                        textArea.setText(hiddenString.getString());
+                    } else {
+                        textArea.setText(hiddenString.getStringHidden());
+                    }
                 } catch (Exception e1) {
                     fileLabel.setText("Error");
                     e1.printStackTrace();
@@ -170,6 +178,18 @@ public class GuiFilePassword {
 
             }
         });
+        showDataButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isShowData = ! isShowData;
+                update();
+                if (isShowData) {
+                    textArea.setText(hiddenString.getString());
+                } else {
+                    textArea.setText(hiddenString.getStringHidden());
+                }
+            }
+        });
         update();
     }
 
@@ -177,6 +197,12 @@ public class GuiFilePassword {
         saveButton.setEnabled(dataFile != null);
         loadButton.setEnabled(dataFile != null);
         clearButton.setEnabled(dataFile != null);
+        showDataButton.setEnabled(dataFile != null && hiddenString != null);
+        if (isShowData) {
+            showDataButton.setText("Hide");
+        } else {
+            showDataButton.setText("Show");
+        }
         if (dataFile == null) {
             fileLabel.setText("Not set");
         } else {
