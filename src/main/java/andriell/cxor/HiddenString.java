@@ -5,8 +5,11 @@ import java.io.UnsupportedEncodingException;
 public class HiddenString {
     static final String CHARSET = "UTF-8";
 
-    byte[] data;
-    byte[] dataHidden;
+    byte[] data = null;
+    byte[] dataHidden = null;
+
+    public HiddenString() {
+    }
 
     public HiddenString(String s) {
         byte[] bytes = new byte[0];
@@ -15,14 +18,24 @@ public class HiddenString {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        init(bytes);
+        setData(bytes);
     }
 
     public HiddenString(byte[] data) {
-        init(data);
+        setData(data);
     }
 
-    protected void init(byte[] data) {
+    public void setData(String s) {
+        byte[] bytes = new byte[0];
+        try {
+            bytes = s.getBytes(CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        setData(bytes);
+    }
+
+    public void setData(byte[] data) {
         this.data = data;
         this.dataHidden = new byte[data.length];
         boolean isPass = false;
@@ -52,6 +65,12 @@ public class HiddenString {
                 dataHidden[i] = data[i];
             }
         }
+    }
+
+    public void clear()
+    {
+        this.data = null;
+        this.dataHidden = null;
     }
 
     public String copy(int start, int l) {
@@ -94,20 +113,26 @@ public class HiddenString {
 
 
     public String getStringHidden() {
+        if (dataHidden == null) {
+            return "";
+        }
         try {
             return new String(dataHidden, CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
     public String getString() {
+        if (data == null) {
+            return "";
+        }
         try {
             return new String(data, CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 }

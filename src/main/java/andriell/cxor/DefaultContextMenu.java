@@ -12,6 +12,8 @@ import java.awt.event.*;
 
 public class DefaultContextMenu extends JPopupMenu
 {
+    private JTextComponent component;
+
     private Clipboard clipboard;
 
     private UndoManager undoManager;
@@ -26,8 +28,9 @@ public class DefaultContextMenu extends JPopupMenu
 
     private JTextComponent textComponent;
 
-    public DefaultContextMenu()
+    public DefaultContextMenu(JTextComponent component)
     {
+        this.component = component;
         undoManager = new UndoManager();
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
@@ -189,8 +192,8 @@ public class DefaultContextMenu extends JPopupMenu
         textComponent = (JTextComponent) event.getSource();
         textComponent.requestFocus();
 
-        boolean enableUndo = undoManager.canUndo();
-        boolean enableRedo = undoManager.canRedo();
+        boolean enableUndo = undoManager.canUndo() && component.isEditable();
+        boolean enableRedo = undoManager.canRedo() && component.isEditable();
         boolean enableCut = false;
         boolean enableCopy = false;
         boolean enablePaste = false;
@@ -212,15 +215,15 @@ public class DefaultContextMenu extends JPopupMenu
         {
             if (selectedText.length() > 0)
             {
-                enableCut = true;
+                enableCut = component.isEditable();
                 enableCopy = true;
-                enableDelete = true;
+                enableDelete = component.isEditable();
             }
         }
 
         if (clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor) && textComponent.isEnabled())
         {
-            enablePaste = true;
+            enablePaste = component.isEditable();
         }
 
         undo.setEnabled(enableUndo);
@@ -237,7 +240,7 @@ public class DefaultContextMenu extends JPopupMenu
 
     public static void addContextMenu(JTextComponent component)
     {
-        DefaultContextMenu defaultContextMenu = new DefaultContextMenu();
+        DefaultContextMenu defaultContextMenu = new DefaultContextMenu(component);
         defaultContextMenu.addTo(component);
     }
 }
