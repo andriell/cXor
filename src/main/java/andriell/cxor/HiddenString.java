@@ -3,69 +3,50 @@ package andriell.cxor;
 import java.io.UnsupportedEncodingException;
 
 public class HiddenString {
-    static final String CHARSET = "UTF-8";
-    private static final byte CHR_ASTERISK = 0x2a; // *
-    private static final byte CHR_LESS = 0x3c; // <
-    private static final byte CHR_GREATER = 0x3e; // >
-    private static final byte CHR_REVERSE_SOLIDUS = 0x5c; // >
-    private static final byte ONE_OCTET = -64; // >
-
-    byte[] data = null;
-    byte[] dataHidden = null;
+    char[] data = null;
+    char[] dataHidden = null;
 
     public HiddenString() {
     }
 
     public HiddenString(String s) {
-        byte[] bytes = new byte[0];
-        try {
-            bytes = s.getBytes(CHARSET);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        setData(bytes);
+        setData(s.toCharArray());
     }
 
-    public HiddenString(byte[] data) {
+    public HiddenString(char[] data) {
         setData(data);
     }
 
     public void setData(String s) {
-        byte[] bytes = new byte[0];
-        try {
-            bytes = s.getBytes(CHARSET);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        setData(bytes);
+        setData(s.toCharArray());
     }
 
-    public void setData(byte[] data) {
+    public void setData(char[] data) {
         this.data = data;
-        this.dataHidden = new byte[data.length];
+        this.dataHidden = new char[data.length];
         boolean isPass = false;
         boolean slash = false;
         for (int i = 0; i < data.length; i++) {
             if (slash) {
                 slash = false;
-                dataHidden[i] = isPass ? CHR_ASTERISK : data[i];
+                dataHidden[i] = isPass ? '*' : data[i];
                 continue;
             }
-            if (data[i] == CHR_LESS) { // <
+            if (data[i] == '<') {
                 isPass = true;
-                dataHidden[i] = CHR_ASTERISK;
+                dataHidden[i] = '*';
                 continue;
-            } else if (data[i] == CHR_GREATER) { // >
+            } else if (data[i] == '>') {
                 isPass = false;
-                dataHidden[i] = CHR_ASTERISK;
+                dataHidden[i] = '*';
                 continue;
             }
 
-            if (data[i] == CHR_REVERSE_SOLIDUS) { // \
+            if (data[i] == '\\') {
                 slash = true;
             }
             if (isPass) {
-                dataHidden[i] = CHR_ASTERISK;
+                dataHidden[i] = data[i] == '\n' ? '\n' : '*';
             } else {
                 dataHidden[i] = data[i];
             }
@@ -83,38 +64,29 @@ public class HiddenString {
             return "";
         }
 
-        byte[] bytes = new byte[data.length];
+        char[] bytes = new char[data.length];
         boolean slash = false;
-        int chr = 0;
         int j = 0;
         for (int i = 0; i < data.length; i++) {
-            if (data[i] >= ONE_OCTET) {
-                chr++;
-            }
             if (slash) {
                 slash = false;
-                if (start < chr && chr <= start + l) {
+                if (start <= i && i < start + l) {
                     bytes[j++] = data[i];
                 }
                 continue;
             }
-            if (data[i] == CHR_LESS || data[i] == CHR_GREATER) { // < >
+            if (data[i] == '<' || data[i] == '>') {
                 continue;
             }
-            if (data[i] == CHR_REVERSE_SOLIDUS) { // \
+            if (data[i] == '\\') {
                 slash = true;
                 continue;
             }
-            if (start < chr && chr <= start + l) {
+            if (start <= i && i < start + l) {
                 bytes[j++] = data[i];
             }
         }
-        try {
-            return new String(bytes, 0, j, CHARSET);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return new String(bytes, 0, j);
     }
 
 
@@ -122,23 +94,13 @@ public class HiddenString {
         if (dataHidden == null) {
             return "";
         }
-        try {
-            return new String(dataHidden, CHARSET);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return new String(dataHidden);
     }
 
     public String getString() {
         if (data == null) {
             return "";
         }
-        try {
-            return new String(data, CHARSET);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return new String(data);
     }
 }

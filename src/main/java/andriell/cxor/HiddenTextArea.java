@@ -6,7 +6,7 @@ import javax.swing.*;
 public class HiddenTextArea extends JTextArea {
     private HiddenString hiddenString = new HiddenString();
 
-    public void setTextAndHide(byte[] t) {
+    public void setTextAndHide(String t) {
         hiddenString.setData(t);
         super.setText(hiddenString.getStringHidden());
     }

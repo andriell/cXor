@@ -89,7 +89,7 @@ public class GuiFilePassword {
                     dataIs.close();
                     textArea.setEditable(false);
                     HiddenTextArea hiddenTextArea = (HiddenTextArea) textArea;
-                    hiddenTextArea.setTextAndHide(data);
+                    hiddenTextArea.setTextAndHide(new String(data, CHARSET));
                 } catch (Exception e1) {
                     fileLabel.setText("Error");
                     e1.printStackTrace();

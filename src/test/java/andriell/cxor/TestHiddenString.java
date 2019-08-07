@@ -2,16 +2,13 @@ package andriell.cxor;
 
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class TestHiddenString {
     @Test
-    public void test1() throws IOException {
-        String s = "1 \\< 2 && 3 \\> 2 text: <pass\\>word> текст text\\\\html";
-        String sh = "1 \\< 2 && 3 \\> 2 text: ************ текст text\\\\html";
+    public void test1() {
+        String s = "1 \\< 2 && 3 \\> 2 text: <pass\\>word> текст text\\\\html\nПол\\ьзователь <па\nро\\>ль>";
+        String sh = "1 \\< 2 && 3 \\> 2 text: ************ текст text\\\\html\nПол\\ьзователь ***\n*******";
 
         HiddenString hiddenString = new HiddenString(s);
 
@@ -80,9 +77,33 @@ public class TestHiddenString {
                 "1 < 2 && 3 > 2 text: pass>word текст text\\ht",
                 "1 < 2 && 3 > 2 text: pass>word текст text\\htm",
                 "1 < 2 && 3 > 2 text: pass>word текст text\\html",
-                "1 < 2 && 3 > 2 text: pass>word текст text\\html",
-                "1 < 2 && 3 > 2 text: pass>word текст text\\html",
-
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\n",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nП",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПо",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПол",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПол",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПоль",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПольз",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользо",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользов",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользова",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользоват",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользовате",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользовател",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь ",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь ",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь п",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\n",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nр",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>л",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>ль",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>ль",
+                "1 < 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>ль",
         };
         for (int i = 0; i < strings.length; i++) {
             assertEquals(hiddenString.copy(0, i), strings[i]);
@@ -140,8 +161,33 @@ public class TestHiddenString {
                 "< 2 && 3 > 2 text: pass>word текст text\\ht",
                 "< 2 && 3 > 2 text: pass>word текст text\\htm",
                 "< 2 && 3 > 2 text: pass>word текст text\\html",
-                "< 2 && 3 > 2 text: pass>word текст text\\html",
-                "< 2 && 3 > 2 text: pass>word текст text\\html",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\n",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nП",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПо",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПол",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПол",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПоль",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПольз",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользо",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользов",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользова",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользоват",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользовате",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользовател",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь ",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь ",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь п",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\n",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nр",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>л",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>ль",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>ль",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>ль",
         };
         for (int i = 0; i < strings2.length; i++) {
             assertEquals(hiddenString.copy(2, i), strings2[i]);
@@ -199,8 +245,33 @@ public class TestHiddenString {
                 "< 2 && 3 > 2 text: pass>word текст text\\ht",
                 "< 2 && 3 > 2 text: pass>word текст text\\htm",
                 "< 2 && 3 > 2 text: pass>word текст text\\html",
-                "< 2 && 3 > 2 text: pass>word текст text\\html",
-                "< 2 && 3 > 2 text: pass>word текст text\\html",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\n",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nП",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПо",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПол",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПол",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПоль",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПольз",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользо",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользов",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользова",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользоват",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользовате",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользовател",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь ",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь ",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь п",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\n",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nр",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>л",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>ль",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>ль",
+                "< 2 && 3 > 2 text: pass>word текст text\\html\nПользователь па\nро>ль",
         };
 
         for (int i = 0; i < strings3.length; i++) {
@@ -208,7 +279,6 @@ public class TestHiddenString {
         }
     }
 
-    @Test
     public void test2() {
         byte b = 0;
         do {
@@ -216,5 +286,21 @@ public class TestHiddenString {
             System.out.println(s2 + " " + b);
             b++;
         } while (b != 0);
+    }
+
+    public void test3() {
+
+        String s = "А";
+        byte[] bytes = s.getBytes();
+        for (byte b : bytes) {
+            String s2 = String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0');
+            System.out.println(s2 + " " + b);
+        }
+
+        char[] chars = s.toCharArray();
+        for (char c : chars) {
+            String s2 = String.format("%16s", Integer.toBinaryString(c & 0xFFFF)).replace(' ', '0');
+            System.out.println(s2 + " " + c);
+        }
     }
 }
