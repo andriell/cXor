@@ -3,6 +3,8 @@ package andriell.cxor;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,7 +56,7 @@ public class GuiFilePassword {
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     dataFile = dataFileChooser.getSelectedFile();
                     Preferences.put(Preferences.LAST_USED_FOLDER_DATA_PASS, dataFileChooser.getSelectedFile().getParent());
-                      update();
+                    update();
                 }
                 Preferences.putSerializable(Preferences.LAST_USED_DIMENSION, dataFileChooser.getSize());
                 dataFileChooser.setPreferredSize(dataFileChooser.getSize());
@@ -122,7 +124,7 @@ public class GuiFilePassword {
                     FileOutputStream os = new FileOutputStream(dataFile);
                     byte[] data = textArea.getText().getBytes(CHARSET);
                     PasswordSequence sequence = new PasswordSequence(passwordField.getPassword());
-                    for (byte b: data) {
+                    for (byte b : data) {
                         os.write(sequence.read() ^ b);
                     }
                     os.flush();
@@ -136,20 +138,9 @@ public class GuiFilePassword {
             }
         });
 
-        DocumentListener documentListener = new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                update();
-            }
-            public void removeUpdate(DocumentEvent e) {
-                update();
-            }
-            public void changedUpdate(DocumentEvent e) {
-                update();
-            }
-        };
-        //passwordField.getDocument().addDocumentListener(documentListener);
-        //textArea.getDocument().addDocumentListener(documentListener);
         DefaultContextMenu.addContextMenu(textArea);
+        DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
         showButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
@@ -188,7 +179,7 @@ public class GuiFilePassword {
         saveButton.setEnabled(dataFile != null && textArea.isEditable());
         loadButton.setEnabled(dataFile != null);
         clearButton.setEnabled(dataFile != null);
-        editDataButton.setEnabled(dataFile != null);
+        editDataButton.setEnabled(dataFile != null && textArea.getText() != null && !"".equals(textArea.getText()));
         if (textArea.isEditable()) {
             editDataButton.setText("Hide");
         } else {
