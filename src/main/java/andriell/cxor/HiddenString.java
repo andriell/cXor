@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 public class HiddenString {
     char[] data = null;
     char[] dataHidden = null;
+    int dataHiddenLength = 0;
 
     public HiddenString() {
     }
@@ -24,37 +25,26 @@ public class HiddenString {
     public void setData(char[] data) {
         this.data = data;
         this.dataHidden = new char[data.length];
+        dataHiddenLength = 0;
         boolean isPass = false;
-        boolean slash = false;
         for (int i = 0; i < data.length; i++) {
-            if (slash) {
-                slash = false;
-                dataHidden[i] = isPass ? '*' : data[i];
-                continue;
-            }
-            if (data[i] == '<') {
-                isPass = true;
-                dataHidden[i] = '*';
-                continue;
-            } else if (data[i] == '>') {
-                isPass = false;
-                dataHidden[i] = '*';
-                continue;
-            }
-
-            if (data[i] == '\\') {
-                slash = true;
+            if (data[i] == '"') {
+                if (i != data.length - 1 && data[i + 1] == '"') {
+                    i++;
+                } else {
+                    isPass = !isPass;
+                    continue;
+                }
             }
             if (isPass) {
-                dataHidden[i] = data[i] == '\n' ? '\n' : '*';
+                dataHidden[dataHiddenLength++] = data[i] == '\n' ? '\n' : '*';
             } else {
-                dataHidden[i] = data[i];
+                dataHidden[dataHiddenLength++] = data[i];
             }
         }
     }
 
-    public void clear()
-    {
+    public void clear() {
         this.data = null;
         this.dataHidden = null;
     }
@@ -63,30 +53,24 @@ public class HiddenString {
         if (start < 0 || l <= 0) {
             return "";
         }
-
-        char[] bytes = new char[data.length];
-        boolean slash = false;
+        char[] r = new char[data.length];
+        int chr = 0;
         int j = 0;
         for (int i = 0; i < data.length; i++) {
-            if (slash) {
-                slash = false;
-                if (start <= i && i < start + l) {
-                    bytes[j++] = data[i];
+            if (data[i] == '"') {
+                if (i != data.length - 1 && data[i + 1] == '"') {
+                    i++;
+                } else {
+                    // password begin or end
+                    continue;
                 }
-                continue;
             }
-            if (data[i] == '<' || data[i] == '>') {
-                continue;
-            }
-            if (data[i] == '\\') {
-                slash = true;
-                continue;
-            }
-            if (start <= i && i < start + l) {
-                bytes[j++] = data[i];
+            chr++;
+            if (start < chr && chr <= start + l) {
+                r[j++] = data[i];
             }
         }
-        return new String(bytes, 0, j);
+        return new String(r, 0, j);
     }
 
 
@@ -94,7 +78,7 @@ public class HiddenString {
         if (dataHidden == null) {
             return "";
         }
-        return new String(dataHidden);
+        return new String(dataHidden, 0, dataHiddenLength);
     }
 
     public String getString() {
