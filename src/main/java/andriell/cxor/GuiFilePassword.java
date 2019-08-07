@@ -30,7 +30,7 @@ public class GuiFilePassword {
     private File dataFile;
     private char echoChar;
 
-    private static final String CHARSET = HiddenString.CHARSET;
+    private static final String CHARSET = "UTF-8";
 
     public JPanel getRootPane() {
         return rootPane;

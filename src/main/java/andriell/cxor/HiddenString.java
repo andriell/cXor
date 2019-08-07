@@ -4,6 +4,11 @@ import java.io.UnsupportedEncodingException;
 
 public class HiddenString {
     static final String CHARSET = "UTF-8";
+    private static final byte CHR_ASTERISK = 0x2a; // *
+    private static final byte CHR_LESS = 0x3c; // <
+    private static final byte CHR_GREATER = 0x3e; // >
+    private static final byte CHR_REVERSE_SOLIDUS = 0x5c; // >
+    private static final byte ONE_OCTET = -64; // >
 
     byte[] data = null;
     byte[] dataHidden = null;
@@ -43,24 +48,24 @@ public class HiddenString {
         for (int i = 0; i < data.length; i++) {
             if (slash) {
                 slash = false;
-                dataHidden[i] = isPass ? 0x2a : data[i];
+                dataHidden[i] = isPass ? CHR_ASTERISK : data[i];
                 continue;
             }
-            if (data[i] == 0x3c) { // <
+            if (data[i] == CHR_LESS) { // <
                 isPass = true;
-                dataHidden[i] = 0x2a;
+                dataHidden[i] = CHR_ASTERISK;
                 continue;
-            } else if (data[i] == 0x3e) { // >
+            } else if (data[i] == CHR_GREATER) { // >
                 isPass = false;
-                dataHidden[i] = 0x2a;
+                dataHidden[i] = CHR_ASTERISK;
                 continue;
             }
 
-            if (data[i] == 0x5c) { // \
+            if (data[i] == CHR_REVERSE_SOLIDUS) { // \
                 slash = true;
             }
             if (isPass) {
-                dataHidden[i] = 0x2a;
+                dataHidden[i] = CHR_ASTERISK;
             } else {
                 dataHidden[i] = data[i];
             }
@@ -74,32 +79,33 @@ public class HiddenString {
     }
 
     public String copy(int start, int l) {
-        if (start < 0 || l <= 0 || start >= data.length) {
-            return null;
+        if (start < 0 || l <= 0) {
+            return "";
         }
 
-        if (start + l > data.length) {
-            l = data.length - start;
-        }
-        byte[] bytes = new byte[l];
+        byte[] bytes = new byte[data.length];
         boolean slash = false;
+        int chr = 0;
         int j = 0;
-        for (int i = 0; i < start + l; i++) {
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] > ONE_OCTET) {
+                chr++;
+            }
             if (slash) {
                 slash = false;
-                if (i >= start) {
+                if (start < chr && chr <= start + l) {
                     bytes[j++] = data[i];
                 }
                 continue;
             }
-            if (data[i] == 0x3c || data[i] == 0x3e) { // < >
+            if (data[i] == CHR_LESS || data[i] == CHR_GREATER) { // < >
                 continue;
             }
-            if (data[i] == 0x5c) { // \
+            if (data[i] == CHR_REVERSE_SOLIDUS) { // \
                 slash = true;
                 continue;
             }
-            if (i >= start) {
+            if (start < chr && chr <= start + l) {
                 bytes[j++] = data[i];
             }
         }
@@ -108,7 +114,7 @@ public class HiddenString {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
 
