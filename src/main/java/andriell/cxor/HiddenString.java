@@ -88,7 +88,7 @@ public class HiddenString {
         int chr = 0;
         int j = 0;
         for (int i = 0; i < data.length; i++) {
-            if (data[i] > ONE_OCTET) {
+            if (data[i] >= ONE_OCTET) {
                 chr++;
             }
             if (slash) {
