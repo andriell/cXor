@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultCaret;
-import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,11 +25,11 @@ public class GuiFilePassword {
     private JButton loadButton;
     private JButton clearButton;
     private JButton editDataButton;
-    private JScrollPane textAreaScrollPane;
 
     private JFileChooser dataFileChooser;
     private File dataFile;
     private char echoChar;
+    private Color backgroundColor;
 
     private static final String CHARSET = "UTF-8";
 
@@ -40,6 +39,7 @@ public class GuiFilePassword {
 
     public void init() {
         String defaultPath = new File(".").getAbsolutePath();
+        backgroundColor = rootPane.getBackground();
 
         dataFileChooser = new JFileChooser(Preferences.get(Preferences.LAST_USED_FOLDER_DATA_PASS, defaultPath));
         Dimension dimension = (Dimension) Preferences.getSerializable(Preferences.LAST_USED_DIMENSION, dataFileChooser.getPreferredSize());
@@ -140,7 +140,7 @@ public class GuiFilePassword {
 
         DefaultContextMenu.addContextMenu(textArea);
         DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+        caret.setUpdatePolicy(DefaultCaret.UPDATE_WHEN_ON_EDT);
 
         showButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
@@ -182,8 +182,10 @@ public class GuiFilePassword {
         editDataButton.setEnabled(dataFile != null && textArea.getText() != null && !"".equals(textArea.getText()));
         if (textArea.isEditable()) {
             editDataButton.setText("Hide");
+            textArea.setBackground(Color.WHITE);
         } else {
             editDataButton.setText("Edit");
+            textArea.setBackground(backgroundColor);
         }
         if (dataFile == null) {
             fileLabel.setText("Not set");

@@ -37,7 +37,7 @@ public class HiddenString {
                 }
             }
             if (isPass) {
-                dataHidden[dataHiddenLength++] = data[i] == '\n' ? '\n' : '*';
+                dataHidden[dataHiddenLength++] = data[i] == '\n' ? '\n' : 'x';
             } else {
                 dataHidden[dataHiddenLength++] = data[i];
             }
