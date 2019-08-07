@@ -8,7 +8,7 @@ public class TestHiddenString {
     @Test
     public void test1() {
         String s = "\"\"text\"\": \"pass\"\"word\" текст text\\html\nПользователь \"па\nро\"\"ль\"";
-        String sh = "\"text\": ********* текст text\\html\nПользователь **\n*****";
+        String sh = "\"text\": xxxxxxxxx текст text\\html\nПользователь xx\nxxxxx";
         String sc = "\"text\": pass\"word текст text\\html\nПользователь па\nро\"ль";
 
         assertEquals(sh.length(), sc.length());

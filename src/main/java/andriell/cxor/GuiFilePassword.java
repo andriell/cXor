@@ -1,14 +1,8 @@
 package andriell.cxor;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.*;
 
 /**
@@ -25,6 +19,7 @@ public class GuiFilePassword {
     private JButton loadButton;
     private JButton clearButton;
     private JButton editDataButton;
+    private JScrollPane textAreaSp;
 
     private JFileChooser dataFileChooser;
     private File dataFile;
@@ -139,8 +134,7 @@ public class GuiFilePassword {
         });
 
         DefaultContextMenu.addContextMenu(textArea);
-        DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.UPDATE_WHEN_ON_EDT);
+        ((HiddenTextArea) textArea).setScrollPane(textAreaSp);
 
         showButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
