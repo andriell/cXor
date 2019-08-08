@@ -5,7 +5,9 @@ import java.io.UnsupportedEncodingException;
 public class HiddenString {
     char[] data = null;
     char[] dataHidden = null;
+    char[] dataCopy = null;
     int dataHiddenLength = 0;
+    int dataCopyLength = 0;
 
     public HiddenString() {
     }
@@ -25,22 +27,43 @@ public class HiddenString {
     public void setData(char[] data) {
         this.data = data;
         this.dataHidden = new char[data.length];
+        this.dataCopy = new char[data.length];
         dataHiddenLength = 0;
+        dataCopyLength = 0;
         boolean isPass = false;
         for (int i = 0; i < data.length; i++) {
             if (data[i] == '"') {
-                if (i != data.length - 1 && data[i + 1] == '"') {
-                    i++;
+                //<editor-fold desc="counting quotes">
+                int quotes = 1;
+                for (int j = i + 1; j < data.length; j++) {
+                    if (data[j] != '"') {
+                        break;
+
+                    }
+                    quotes++;
+                }
+                //</editor-fold>
+                int end = i + quotes;
+                if (quotes % 2 == 0) {
+                    for (; i < end; i += 2) {
+                        dataHidden[dataHiddenLength++] = isPass ? 'x' : '"';
+                        dataCopy[dataCopyLength++] = data[i];
+                    }
                 } else {
+                    i++;
+                    end--;
+                    for (; i < end; i += 2) {
+                        dataHidden[dataHiddenLength++] = 'x';
+                        dataCopy[dataCopyLength++] = data[i];
+                    }
                     isPass = !isPass;
-                    continue;
                 }
             }
-            if (isPass) {
-                dataHidden[dataHiddenLength++] = data[i] == '\n' ? '\n' : 'x';
-            } else {
-                dataHidden[dataHiddenLength++] = data[i];
+            if (i >= data.length) {
+                break;
             }
+            dataHidden[dataHiddenLength++] = isPass ? (data[i] == '\n' ? '\n' : 'x') : data[i];
+            dataCopy[dataCopyLength++] = data[i];
         }
     }
 
@@ -50,29 +73,14 @@ public class HiddenString {
     }
 
     public String copy(int start, int l) {
-        if (start < 0 || l <= 0) {
+        if (start < 0 || l <= 0 || start > dataCopyLength - 1) {
             return "";
         }
-        char[] r = new char[data.length];
-        int chr = 0;
-        int j = 0;
-        for (int i = 0; i < data.length; i++) {
-            if (data[i] == '"') {
-                if (i != data.length - 1 && data[i + 1] == '"') {
-                    i++;
-                } else {
-                    // password begin or end
-                    continue;
-                }
-            }
-            chr++;
-            if (start < chr && chr <= start + l) {
-                r[j++] = data[i];
-            }
+        if (l > dataCopyLength) {
+            l = dataCopyLength;
         }
-        return new String(r, 0, j);
+        return new String(dataCopy, start, l);
     }
-
 
     public String getStringHidden() {
         if (dataHidden == null) {
