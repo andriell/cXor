@@ -1,6 +1,7 @@
 package andriell.cxor;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -25,8 +26,9 @@ public class GuiFilePassword {
     private File dataFile;
     private char echoChar;
     private Color backgroundColor;
-
-    private static final String CHARSET = "UTF-8";
+    private BinFile binFile;
+    private boolean loaded = false;
+    private String error;
 
     public JPanel getRootPane() {
         return rootPane;
@@ -35,8 +37,15 @@ public class GuiFilePassword {
     public void init() {
         String defaultPath = new File(".").getAbsolutePath();
         backgroundColor = rootPane.getBackground();
+        binFile = new BinFile();
 
         dataFileChooser = new JFileChooser(Preferences.get(Preferences.LAST_USED_FOLDER_DATA_PASS, defaultPath));
+        FileNameExtensionFilter ff = new FileNameExtensionFilter("All formats (*.cxorz, *.cxor, *.bin)", "cxor", "cxorz", "bin");
+        dataFileChooser.addChoosableFileFilter(ff);
+        dataFileChooser.setFileFilter(ff);
+        dataFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Zipped format (*.cxorz)", "cxorz"));
+        dataFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Regular format (*.cxor, *.bin)", "cxor", "bin"));
+
         Dimension dimension = (Dimension) Preferences.getSerializable(Preferences.LAST_USED_DIMENSION, dataFileChooser.getPreferredSize());
         dataFileChooser.setPreferredSize(dimension);
         echoChar = passwordField.getEchoChar();
@@ -60,46 +69,27 @@ public class GuiFilePassword {
 
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (dataFile == null || !dataFile.isFile()) {
-                    fileLabel.setText("The file is not loaded");
-                    return;
-                }
-                long fileSizeL = dataFile.length();
-                if (fileSizeL > 1048576) {
-                    fileLabel.setText("The file is too large");
-                    return;
-                }
                 try {
-                    CircularInputStream dataIs = new CircularInputStream(dataFile);
-                    int fileSize = (int) fileSizeL;
-                    byte[] data = new byte[fileSize];
-                    if (passwordField.getPassword() == null || passwordField.getPassword().length < 1) {
-                        for (int i = 0; i < fileSize; i++) {
-                            data[i] = dataIs.read();
-                        }
-                    } else {
-                        PasswordSequence sequence = new PasswordSequence(passwordField.getPassword());
-                        for (int i = 0; i < fileSize; i++) {
-                            data[i] = (byte) (sequence.read() ^ dataIs.read());
-                        }
-                    }
-                    dataIs.close();
+                    loaded = false;
+                    binFile.setFile(dataFile);
+                    binFile.setPassword(passwordField.getPassword());
+                    byte[] data = binFile.read();
                     textArea.setEditable(false);
                     HiddenTextArea hiddenTextArea = (HiddenTextArea) textArea;
-                    hiddenTextArea.setTextAndHide(new String(data, CHARSET));
+                    hiddenTextArea.setTextAndHide(new String(data, BinFile.CHARSET));
+                    loaded = true;
+                    error = null;
                 } catch (Exception e1) {
-                    fileLabel.setText("Error");
-                    e1.printStackTrace();
+                    error = e1.getMessage();
                 }
                 update();
-                saveButton.setEnabled(false);
             }
         });
 
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 passwordField.setText("");
-                textArea.setText("");
+                loaded = false;
                 dataFile = null;
                 update();
             }
@@ -107,26 +97,14 @@ public class GuiFilePassword {
 
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (dataFile == null) {
-                    fileLabel.setText("The file is not loaded");
-                    return;
-                }
-                if (passwordField.getPassword() == null || passwordField.getPassword().length < 1) {
-                    fileLabel.setText("Empty password");
-                    return;
-                }
                 try {
-                    FileOutputStream os = new FileOutputStream(dataFile);
-                    byte[] data = textArea.getText().getBytes(CHARSET);
-                    PasswordSequence sequence = new PasswordSequence(passwordField.getPassword());
-                    for (byte b : data) {
-                        os.write(sequence.read() ^ b);
-                    }
-                    os.flush();
-                    os.close();
+                    binFile.setFile(dataFile);
+                    binFile.setPassword(passwordField.getPassword());
+                    byte[] data = textArea.getText().getBytes(BinFile.CHARSET);
+                    binFile.save(data);
+                    error = null;
                 } catch (Exception e1) {
-                    fileLabel.setText("Error");
-                    e1.printStackTrace();
+                    error = e1.getMessage();
                 }
                 update();
                 saveButton.setEnabled(false);
@@ -173,7 +151,10 @@ public class GuiFilePassword {
         saveButton.setEnabled(dataFile != null && textArea.isEditable());
         loadButton.setEnabled(dataFile != null);
         clearButton.setEnabled(dataFile != null);
-        editDataButton.setEnabled(dataFile != null && textArea.getText() != null && !"".equals(textArea.getText()));
+        editDataButton.setEnabled(dataFile != null && loaded);
+        if (!loaded) {
+            textArea.setText("");
+        }
         if (textArea.isEditable()) {
             editDataButton.setText("Hide");
             textArea.setBackground(Color.WHITE);
@@ -181,10 +162,15 @@ public class GuiFilePassword {
             editDataButton.setText("Edit");
             textArea.setBackground(backgroundColor);
         }
-        if (dataFile == null) {
+        if (this.error != null) {
+            fileLabel.setText(this.error);
+            fileLabel.setForeground(Color.RED);
+        } else if (dataFile == null) {
             fileLabel.setText("Not set");
+            fileLabel.setForeground(Color.BLACK);
         } else {
             fileLabel.setText(dataFile.getName());
+            fileLabel.setForeground(Color.BLACK);
         }
     }
 
