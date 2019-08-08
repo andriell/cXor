@@ -28,6 +28,7 @@ public class GuiFileFile {
     private JPanel spectrumPanel;
     private JCheckBox skipNullBytesCheckBox;
     private JButton saveSpectrumButton;
+    private JButton clearButton;
 
     private JFileChooser dataFileChooser;
     private JFileChooser keyFileChooser;
@@ -118,6 +119,15 @@ public class GuiFileFile {
             }
         });
 
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dataFile = null;
+                keyFile = null;
+                ((SpectrumPanel)spectrumPanel).clear();
+                update();
+            }
+        });
+
         calcButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -135,10 +145,12 @@ public class GuiFileFile {
     }
 
     private void update() {
+        clearButton.setEnabled(!((SpectrumPanel)spectrumPanel).isEmpty() && !isRun);
         if (dataFile == null) {
             dataLabel.setText("Not set");
         } else {
             dataLabel.setText(dataFile.getName() + " [" + StringHelper.fileSize(dataFile.length()) + "]");
+            clearButton.setEnabled(!isRun);
         }
         if (keyFile == null) {
             keyLabel.setText("Not set");
@@ -146,6 +158,7 @@ public class GuiFileFile {
         } else {
             keyLabel.setText(keyFile.getName() + " [" + StringHelper.fileSize(keyFile.length()) + "]");
             calcButton.setEnabled(!isRun);
+            clearButton.setEnabled(!isRun);
         }
         saveButton.setEnabled((dataFile != null && keyFile != null) || isRun);
         saveSpectrumButton.setEnabled(!((SpectrumPanel)spectrumPanel).isEmpty() && !isRun);

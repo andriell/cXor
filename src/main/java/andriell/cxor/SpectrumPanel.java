@@ -47,14 +47,19 @@ public class SpectrumPanel extends JPanel {
         return spectrum == null || spectrum.length != 256;
     }
 
+    public void clear() {
+        this.spectrum = null;
+        repaint();
+    }
+
     public Dimension getPreferredSize() {
-        int maxWidth = rootPanel.getWidth() - this.getX() - 5;
-        int maxHeight = rootPanel.getHeight() - this.getY() - 5;
-        int sW = maxWidth / 258;
-        int sH = maxHeight / 102;
+        int maxWidth = rootPanel.getWidth() - this.getX() - 7;
+        int maxHeight = rootPanel.getHeight() - this.getY() - 7;
+        int sW = maxWidth / 256;
+        int sH = maxHeight / 100;
         sizeH = Math.max(1, sH);
         sizeV = Math.max(1, sW);
-        return new Dimension(258 * sizeV, 102 * sizeH);
+        return new Dimension(256 * sizeV + 2, 100 * sizeH + 2);
     }
 
     public void saveToFile(File file) throws IOException {
@@ -66,14 +71,14 @@ public class SpectrumPanel extends JPanel {
 
     public void paintSpectrum(Graphics g) {
         g.setColor(COLOR_GRAY);
-        g.fillRect(0, 0, 258 * sizeV, 102 * sizeH);
+        g.fillRect(0, 0, 256 * sizeV + 2, 100 * sizeH + 2);
         if (isEmpty()) {
-            g.setColor(Color.white);
-            g.fillRect(sizeV, sizeH, 256 * sizeV, 100 * sizeH);
+            g.setColor(rootPanel.getBackground());
+            g.fillRect(1, 1, 256 * sizeV, 100 * sizeH);
             return;
         }
         g.setColor(COLOR_GREEN);
-        g.fillRect(sizeV, sizeH, 256 * sizeV, 100 * sizeH);
+        g.fillRect(1, 1, 256 * sizeV, 100 * sizeH);
         g.setColor(COLOR_RED);
         long spectrumMax = 0;
         for (int i = 0; i < 256; i++) {
@@ -82,7 +87,7 @@ public class SpectrumPanel extends JPanel {
         int spectrumInt[] = new int[256];
         for (int i = 0; i < 256; i++) {
             spectrumInt[i] = (int) Math.round(((double) spectrum[i] / (double) spectrumMax) * 1000d);
-            g.fillRect ((i + 1) * sizeV, sizeH, sizeV, (1000 - spectrumInt[i]) / 10 * sizeH);
+            g.fillRect (i * sizeV + 1, 1, sizeV, (1000 - spectrumInt[i]) / 10 * sizeH);
         }
         if (sizeH < 3 || sizeV < 3) {
             return;
