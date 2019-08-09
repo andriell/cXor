@@ -3,6 +3,8 @@ package andriell.cxor.gui;
 import andriell.cxor.Constants;
 import andriell.cxor.file.CryptoFileInterface;
 import andriell.cxor.file.CryptoFiles;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -71,6 +73,7 @@ public class GuiFileNotepad {
         //</editor-fold>
 
         //<editor-fold desc="openButton">
+        openButton.setIcon(FontIcon.of(FontAwesome.FOLDER_OPEN, Color.GRAY));
         openButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int ret = dataFileChooser.showOpenDialog(rootPane);
@@ -88,6 +91,7 @@ public class GuiFileNotepad {
         //</editor-fold>
 
         //<editor-fold desc="decodeButton">
+        decodeButton.setIcon(FontIcon.of(FontAwesome.SIGN_IN, Color.GRAY));
         decodeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -111,11 +115,13 @@ public class GuiFileNotepad {
         //</editor-fold>
 
         //<editor-fold desc="clearButton">
+        clearButton.setIcon(FontIcon.of(FontAwesome.POWER_OFF, Color.GRAY));
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 passwordField.setText("");
                 loaded = false;
                 dataFile = null;
+                formatComboBox.setSelectedIndex(0);
                 update();
             }
         });
@@ -127,7 +133,7 @@ public class GuiFileNotepad {
                 try {
                     int i = formatComboBox.getSelectedIndex();
                     CryptoFileInterface cryptoFile = CryptoFiles.getInstance().getCryptoFile(i);
-                    dataFile = CryptoFiles.getInstance().renameFile(dataFile, cryptoFile);
+                    // dataFile = CryptoFiles.getInstance().renameFile(dataFile, cryptoFile);
                     cryptoFile.setFile(dataFile);
                     cryptoFile.setPassword(new String(passwordField.getPassword()).getBytes(Constants.CHARSET));
                     byte[] data = textArea.getText().getBytes(Constants.CHARSET);
@@ -137,32 +143,6 @@ public class GuiFileNotepad {
                     error = e1.getMessage();
                 }
                 update();
-            }
-        });
-        //</editor-fold>
-
-        //<editor-fold desc="showButton">
-        showButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            public void mousePressed(MouseEvent e) {
-                passwordField.setEchoChar((char) 0);
-                showButton.setText("Hide");
-            }
-
-            public void mouseReleased(MouseEvent e) {
-                passwordField.setEchoChar(echoChar);
-                showButton.setText("Show");
-            }
-
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            public void mouseExited(MouseEvent e) {
-
             }
         });
         //</editor-fold>
@@ -177,11 +157,45 @@ public class GuiFileNotepad {
         });
         //</editor-fold>
 
+        //<editor-fold desc="showButton">
+        showButton.setIcon(FontIcon.of(FontAwesome.EYE, Color.GRAY));
+        showButton.addMouseListener(new MouseListener() {
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            public void mousePressed(MouseEvent e) {
+                passwordField.setEchoChar((char) 0);
+                showButton.setText("Hide");
+                showButton.setIcon(FontIcon.of(FontAwesome.EYE_SLASH, Color.GRAY));
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                passwordField.setEchoChar(echoChar);
+                showButton.setText("Show");
+                showButton.setIcon(FontIcon.of(FontAwesome.EYE, Color.GRAY));
+            }
+
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        //</editor-fold>
+
         update();
     }
 
     private void update() {
         saveButton.setEnabled(dataFile != null && textArea.isEditable());
+        if (saveButton.isEnabled()) {
+            saveButton.setIcon(FontIcon.of(FontAwesome.SAVE, Color.GRAY));
+        } else {
+            saveButton.setIcon(FontIcon.of(FontAwesome.SAVE, Color.LIGHT_GRAY));
+        }
         decodeButton.setEnabled(dataFile != null);
         clearButton.setEnabled(dataFile != null);
         editDataButton.setEnabled(dataFile != null && loaded);
@@ -190,9 +204,11 @@ public class GuiFileNotepad {
         }
         if (textArea.isEditable()) {
             editDataButton.setText("Hide");
+            editDataButton.setIcon(FontIcon.of(FontAwesome.FILE_TEXT_O, Color.GRAY));
             textArea.setBackground(Color.WHITE);
         } else {
             editDataButton.setText("Edit");
+            editDataButton.setIcon(FontIcon.of(FontAwesome.EDIT, Color.GRAY));
             textArea.setBackground(backgroundColor);
         }
         if (this.error != null) {
