@@ -8,10 +8,8 @@ public class CryptoFileText extends AbstractCryptoFile {
     private String[] extensions = {"txt"};
 
     public void save(byte[] data) throws IOException {
-        if (data.length > Constants.MAX_SIZE) {
-            throw new IOException("The data is too large");
-        }
-        BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(getFile()));
+        checkDataSize(data);
+        BufferedOutputStream os = getBufferedOutputStream();
         for (byte b : data) {
             os.write(b);
         }
@@ -20,12 +18,12 @@ public class CryptoFileText extends AbstractCryptoFile {
     }
 
     public byte[] read() throws IOException {
-        BufferedInputStream dataIs = new BufferedInputStream(new FileInputStream(getFile()));
-        int fileSize = (int) getFile().length();
+        BufferedInputStream is = getBufferedInputStream();
+        int fileSize = getFileSizeInt();
         byte[] r;
         r = new byte[fileSize];
         for (int i = 0; i < r.length; i++) {
-            r[i] = (byte) dataIs.read();
+            r[i] = (byte) is.read();
         }
         return r;
     }

@@ -9,20 +9,19 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.Vector;
 
 /**
  * Created by Rybalko on 30.08.2016.
  */
 public class GuiFileNotepad {
-    private JButton fileButton;
+    private JButton openButton;
     private JButton showButton;
     private JPasswordField passwordField;
     private JLabel fileLabel;
     private JTextArea textArea;
     private JButton saveButton;
     private JPanel rootPane;
-    private JButton loadButton;
+    private JButton decodeButton;
     private JButton clearButton;
     private JButton editDataButton;
     private JScrollPane textAreaSp;
@@ -71,12 +70,14 @@ public class GuiFileNotepad {
         formatComboBox.setModel(model);
         //</editor-fold>
 
-        //<editor-fold desc="fileButton">
-        fileButton.addActionListener(new ActionListener() {
+        //<editor-fold desc="openButton">
+        openButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int ret = dataFileChooser.showOpenDialog(rootPane);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     dataFile = dataFileChooser.getSelectedFile();
+                    int i = CryptoFiles.getInstance().getCryptoFileIndex(dataFile);
+                    formatComboBox.setSelectedIndex(i);
                     Preferences.put(Preferences.LAST_USED_FOLDER_DATA_PASS, dataFileChooser.getSelectedFile().getParent());
                     update();
                 }
@@ -86,16 +87,16 @@ public class GuiFileNotepad {
         });
         //</editor-fold>
 
-        //<editor-fold desc="loadButton">
-        loadButton.addActionListener(new ActionListener() {
+        //<editor-fold desc="decodeButton">
+        decodeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
                     loaded = false;
                     int i = formatComboBox.getSelectedIndex();
-                    CryptoFileInterface binFile = CryptoFiles.getInstance().getCryptoFile(i);
-                    binFile.setFile(dataFile);
-                    binFile.setPassword(new String(passwordField.getPassword()).getBytes(Constants.CHARSET));
-                    byte[] data = binFile.read();
+                    CryptoFileInterface cryptoFile = CryptoFiles.getInstance().getCryptoFile(i);
+                    cryptoFile.setFile(dataFile);
+                    cryptoFile.setPassword(new String(passwordField.getPassword()).getBytes(Constants.CHARSET));
+                    byte[] data = cryptoFile.read();
                     textArea.setEditable(false);
                     HiddenTextArea hiddenTextArea = (HiddenTextArea) textArea;
                     hiddenTextArea.setTextAndHide(new String(data, Constants.CHARSET));
@@ -125,11 +126,12 @@ public class GuiFileNotepad {
             public void actionPerformed(ActionEvent e) {
                 try {
                     int i = formatComboBox.getSelectedIndex();
-                    CryptoFileInterface binFile = CryptoFiles.getInstance().getCryptoFile(i);
-                    binFile.setFile(dataFile);
-                    binFile.setPassword(new String(passwordField.getPassword()).getBytes(Constants.CHARSET));
+                    CryptoFileInterface cryptoFile = CryptoFiles.getInstance().getCryptoFile(i);
+                    dataFile = CryptoFiles.getInstance().renameFile(dataFile, cryptoFile);
+                    cryptoFile.setFile(dataFile);
+                    cryptoFile.setPassword(new String(passwordField.getPassword()).getBytes(Constants.CHARSET));
                     byte[] data = textArea.getText().getBytes(Constants.CHARSET);
-                    binFile.save(data);
+                    cryptoFile.save(data);
                     error = null;
                 } catch (Exception e1) {
                     error = e1.getMessage();
@@ -180,7 +182,7 @@ public class GuiFileNotepad {
 
     private void update() {
         saveButton.setEnabled(dataFile != null && textArea.isEditable());
-        loadButton.setEnabled(dataFile != null);
+        decodeButton.setEnabled(dataFile != null);
         clearButton.setEnabled(dataFile != null);
         editDataButton.setEnabled(dataFile != null && loaded);
         if (!loaded) {

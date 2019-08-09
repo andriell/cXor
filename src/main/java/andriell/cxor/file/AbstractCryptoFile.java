@@ -24,7 +24,7 @@ public abstract class AbstractCryptoFile implements CryptoFileInterface {
     }
 
     public void setFile(File file) throws IOException {
-        if (file == null || !file.isFile()) {
+        if (file == null) {
             throw new IOException("The file is not loaded");
         }
         if (file.length() > Constants.MAX_SIZE) {
@@ -48,7 +48,7 @@ public abstract class AbstractCryptoFile implements CryptoFileInterface {
     }
 
     BufferedOutputStream getBufferedOutputStream() throws IOException {
-        if (file == null || !file.isFile()) {
+        if (file == null) {
             throw new IOException("The file is not set");
         }
         return new BufferedOutputStream(new FileOutputStream(file));

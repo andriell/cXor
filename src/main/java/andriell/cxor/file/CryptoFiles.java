@@ -2,6 +2,7 @@ package andriell.cxor.file;
 
 
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 
 public class CryptoFiles {
     private static CryptoFiles instance = null;
@@ -32,6 +33,33 @@ public class CryptoFiles {
             r[i] = cryptoFiles[i].getDescription();
         }
         return r;
+    }
+
+    public File renameFile(File file, CryptoFileInterface cryptoFile) {
+        int dotIndex = file.getAbsolutePath().lastIndexOf('.');
+        String extension = file.getAbsolutePath().substring(dotIndex + 1);
+        String[] extensions = cryptoFile.getExtensions();
+        for (String e : extensions) {
+            if (e.equals(extension)) {
+                return file;
+            }
+        }
+        return new File(file.getAbsolutePath().substring(0, dotIndex + 1) + extensions[0]);
+    }
+
+    /**
+     * Return index crypto file to open a file by the file parameter
+     * @param file File
+     * @return int
+     */
+    public int getCryptoFileIndex(File file) {
+        for (int i = 0; i < cryptoFiles.length; i++) {
+            FileNameExtensionFilter filter = cryptoFiles[i].getExtensionFilter();
+            if (filter.accept(file)) {
+                return i;
+            }
+        }
+        return 3;
     }
 
     public CryptoFileInterface getCryptoFile(int i) {

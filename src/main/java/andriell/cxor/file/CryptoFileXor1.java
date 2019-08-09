@@ -1,11 +1,8 @@
 package andriell.cxor.file;
 
-import andriell.cxor.Constants;
 import andriell.cxor.crypto.PasswordSequence;
 
 import java.io.*;
-import java.security.NoSuchAlgorithmException;
-
 
 public class CryptoFileXor1 extends AbstractCryptoFile {
     private String[] extensions = {"xor"};
