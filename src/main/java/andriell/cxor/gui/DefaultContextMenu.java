@@ -1,4 +1,4 @@
-package andriell.cxor;
+package andriell.cxor.gui;
 
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;

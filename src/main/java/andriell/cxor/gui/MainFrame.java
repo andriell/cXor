@@ -1,4 +1,4 @@
-package andriell.cxor;
+package andriell.cxor.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,10 +24,10 @@ public class MainFrame {
 
         frame.setContentPane(rootPane);
 
-        GuiFilePassword guiFilePassword = new GuiFilePassword();
+        GuiFileNotepad guiFilePassword = new GuiFileNotepad();
         guiFilePassword.setDataFile(dataFile);
         guiFilePassword.init();
-        rootTabbedPane.addTab("Password", guiFilePassword.getRootPane());
+        rootTabbedPane.addTab("Notepad", guiFilePassword.getRootPane());
 
         GuiFileFile guiFileFile = new GuiFileFile();
         guiFileFile.init();

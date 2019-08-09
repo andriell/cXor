@@ -1,5 +1,6 @@
 package andriell.cxor;
 
+import andriell.cxor.crypto.PasswordSequence;
 import org.junit.Test;
 
 import java.io.IOException;

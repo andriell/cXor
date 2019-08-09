@@ -1,5 +1,6 @@
 package andriell.cxor;
 
+import andriell.cxor.gui.HiddenString;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

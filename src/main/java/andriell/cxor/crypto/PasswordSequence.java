@@ -1,4 +1,6 @@
-package andriell.cxor;
+package andriell.cxor.crypto;
+
+import andriell.cxor.Constants;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -13,16 +15,12 @@ public class PasswordSequence {
     private int position = 0;
     private MessageDigest md;
 
-    public PasswordSequence(char[] password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        byte[] p = new byte[password.length];
-        for (int i = 0; i < password.length; i++) {
-            p[i] = (byte) password[i];
-        }
-        setPassword(p);
+    public PasswordSequence(byte[] password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        setPassword(password);
     }
 
     public PasswordSequence(String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        setPassword(password.getBytes());
+        setPassword(password.getBytes(Constants.CHARSET));
     }
 
     private void setPassword(byte[] password) throws UnsupportedEncodingException, NoSuchAlgorithmException {

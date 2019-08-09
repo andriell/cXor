@@ -1,4 +1,4 @@
-package andriell.cxor;
+package andriell.cxor.gui;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

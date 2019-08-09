@@ -1,15 +1,20 @@
-package andriell.cxor;
+package andriell.cxor.gui;
+
+import andriell.cxor.Constants;
+import andriell.cxor.file.CryptoFileInterface;
+import andriell.cxor.file.CryptoFiles;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Vector;
 
 /**
  * Created by Rybalko on 30.08.2016.
  */
-public class GuiFilePassword {
+public class GuiFileNotepad {
     private JButton fileButton;
     private JButton showButton;
     private JPasswordField passwordField;
@@ -21,12 +26,12 @@ public class GuiFilePassword {
     private JButton clearButton;
     private JButton editDataButton;
     private JScrollPane textAreaSp;
+    private JComboBox formatComboBox;
 
     private JFileChooser dataFileChooser;
     private File dataFile;
     private char echoChar;
     private Color backgroundColor;
-    private BinFile binFile;
     private boolean loaded = false;
     private String error;
 
@@ -37,23 +42,36 @@ public class GuiFilePassword {
     public void init() {
         String defaultPath = new File(".").getAbsolutePath();
         backgroundColor = rootPane.getBackground();
-        binFile = new BinFile();
 
+        //<editor-fold desc="textArea">
+        DefaultContextMenu.addContextMenu(textArea);
+        ((HiddenTextArea) textArea).setScrollPane(textAreaSp);
+        //</editor-fold>
+
+        //<editor-fold desc="dataFileChooser">
         dataFileChooser = new JFileChooser(Preferences.get(Preferences.LAST_USED_FOLDER_DATA_PASS, defaultPath));
-        FileNameExtensionFilter ff = new FileNameExtensionFilter("All formats (*.cxorz, *.cxor, *.bin)", "cxor", "cxorz", "bin");
+        FileNameExtensionFilter ff = CryptoFiles.getInstance().getExtensionFilterAll();
         dataFileChooser.addChoosableFileFilter(ff);
         dataFileChooser.setFileFilter(ff);
-        dataFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Zipped format (*.cxorz)", "cxorz"));
-        dataFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Regular format (*.cxor, *.bin)", "cxor", "bin"));
-
+        FileNameExtensionFilter[] filters = CryptoFiles.getInstance().getExtensionFilters();
+        for (FileNameExtensionFilter filter : filters) {
+            dataFileChooser.addChoosableFileFilter(filter);
+        }
         Dimension dimension = (Dimension) Preferences.getSerializable(Preferences.LAST_USED_DIMENSION, dataFileChooser.getPreferredSize());
         dataFileChooser.setPreferredSize(dimension);
         echoChar = passwordField.getEchoChar();
-
         if (dataFile != null && dataFile.isFile()) {
             dataFileChooser.setSelectedFile(dataFile);
         }
+        //</editor-fold>
 
+        //<editor-fold desc="formatComboBox">
+        String[] descriptions = CryptoFiles.getInstance().getDescriptions();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(descriptions);
+        formatComboBox.setModel(model);
+        //</editor-fold>
+
+        //<editor-fold desc="fileButton">
         fileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int ret = dataFileChooser.showOpenDialog(rootPane);
@@ -66,17 +84,21 @@ public class GuiFilePassword {
                 dataFileChooser.setPreferredSize(dataFileChooser.getSize());
             }
         });
+        //</editor-fold>
 
+        //<editor-fold desc="loadButton">
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
                     loaded = false;
+                    int i = formatComboBox.getSelectedIndex();
+                    CryptoFileInterface binFile = CryptoFiles.getInstance().getCryptoFile(i);
                     binFile.setFile(dataFile);
-                    binFile.setPassword(passwordField.getPassword());
+                    binFile.setPassword(new String(passwordField.getPassword()).getBytes(Constants.CHARSET));
                     byte[] data = binFile.read();
                     textArea.setEditable(false);
                     HiddenTextArea hiddenTextArea = (HiddenTextArea) textArea;
-                    hiddenTextArea.setTextAndHide(new String(data, BinFile.CHARSET));
+                    hiddenTextArea.setTextAndHide(new String(data, Constants.CHARSET));
                     loaded = true;
                     error = null;
                 } catch (Exception e1) {
@@ -85,7 +107,9 @@ public class GuiFilePassword {
                 update();
             }
         });
+        //</editor-fold>
 
+        //<editor-fold desc="clearButton">
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 passwordField.setText("");
@@ -94,26 +118,28 @@ public class GuiFilePassword {
                 update();
             }
         });
+        //</editor-fold>
 
+        //<editor-fold desc="saveButton">
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    int i = formatComboBox.getSelectedIndex();
+                    CryptoFileInterface binFile = CryptoFiles.getInstance().getCryptoFile(i);
                     binFile.setFile(dataFile);
-                    binFile.setPassword(passwordField.getPassword());
-                    byte[] data = textArea.getText().getBytes(BinFile.CHARSET);
+                    binFile.setPassword(new String(passwordField.getPassword()).getBytes(Constants.CHARSET));
+                    byte[] data = textArea.getText().getBytes(Constants.CHARSET);
                     binFile.save(data);
                     error = null;
                 } catch (Exception e1) {
                     error = e1.getMessage();
                 }
                 update();
-                saveButton.setEnabled(false);
             }
         });
+        //</editor-fold>
 
-        DefaultContextMenu.addContextMenu(textArea);
-        ((HiddenTextArea) textArea).setScrollPane(textAreaSp);
-
+        //<editor-fold desc="showButton">
         showButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
 
@@ -137,6 +163,9 @@ public class GuiFilePassword {
 
             }
         });
+        //</editor-fold>
+
+        //<editor-fold desc="editDataButton">
         editDataButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -144,6 +173,8 @@ public class GuiFilePassword {
                 update();
             }
         });
+        //</editor-fold>
+
         update();
     }
 

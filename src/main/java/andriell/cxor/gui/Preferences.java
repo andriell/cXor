@@ -1,5 +1,7 @@
-package andriell.cxor;
+package andriell.cxor.gui;
 
+
+import andriell.cxor.Main;
 
 import java.io.*;
 

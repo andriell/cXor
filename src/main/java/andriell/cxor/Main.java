@@ -1,5 +1,7 @@
 package andriell.cxor;
 
+import andriell.cxor.gui.MainFrame;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;

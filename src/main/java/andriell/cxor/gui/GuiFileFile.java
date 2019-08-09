@@ -1,10 +1,12 @@
-package andriell.cxor;
+package andriell.cxor.gui;
+
+import andriell.cxor.crypto.CircularInputStream;
+import andriell.cxor.StringHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;

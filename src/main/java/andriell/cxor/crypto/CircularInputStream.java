@@ -1,4 +1,4 @@
-package andriell.cxor;
+package andriell.cxor.crypto;
 
 import java.io.*;
 
