@@ -2,6 +2,8 @@ package andriell.cxor.gui;
 
 import andriell.cxor.crypto.CircularInputStream;
 import andriell.cxor.StringHelper;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,6 +50,7 @@ public class GuiFileFile {
     private static final String TEXT_STOP = "Stop";
 
     public void init() {
+        //<editor-fold desc="FileChooser">
         String defaultPath = new File(".").getAbsolutePath();
         dataFileChooser = new JFileChooser(Preferences.get(Preferences.LAST_USED_FOLDER_DATA, defaultPath));
         Dimension dimension = (Dimension) Preferences.getSerializable(Preferences.LAST_USED_DIMENSION, dataFileChooser.getPreferredSize());
@@ -58,7 +61,10 @@ public class GuiFileFile {
         saveFileChooser.setPreferredSize(dimension);
         saveSpectrumChooser = new JFileChooser(Preferences.get(Preferences.LAST_USED_FOLDER_KEY, defaultPath));
         saveSpectrumChooser.setPreferredSize(dimension);
+        //</editor-fold>
 
+        //<editor-fold desc="dataButton">
+        dataButton.setIcon(FontIcon.of(FontAwesome.FOLDER_OPEN, Color.GRAY));
         dataButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int ret = dataFileChooser.showOpenDialog(rootPane);
@@ -71,7 +77,10 @@ public class GuiFileFile {
                 dataFileChooser.setPreferredSize(dataFileChooser.getSize());
             }
         });
+        //</editor-fold>
 
+        //<editor-fold desc="keyButton">
+        keyButton.setIcon(FontIcon.of(FontAwesome.FOLDER_OPEN, Color.GRAY));
         keyButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int ret = keyFileChooser.showOpenDialog(rootPane);
@@ -84,7 +93,10 @@ public class GuiFileFile {
                 keyFileChooser.setPreferredSize(keyFileChooser.getSize());
             }
         });
+        //</editor-fold>
 
+        //<editor-fold desc="saveButton">
+        saveButton.setIcon(FontIcon.of(FontAwesome.SAVE, Color.GRAY));
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (isRun) {
@@ -102,7 +114,32 @@ public class GuiFileFile {
                 update();
             }
         });
+        //</editor-fold>
 
+        //<editor-fold desc="clearButton">
+        clearButton.setIcon(FontIcon.of(FontAwesome.EYE_SLASH, Color.GRAY));
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dataFile = null;
+                keyFile = null;
+                ((SpectrumPanel)spectrumPanel).clear();
+                update();
+            }
+        });
+        //</editor-fold>
+
+        //<editor-fold desc="calcButton">
+        calcButton.setIcon(FontIcon.of(FontAwesome.BAR_CHART, Color.GRAY));
+        calcButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                executor.execute(spectrum);
+            }
+        });
+        //</editor-fold>
+
+        //<editor-fold desc="saveSpectrumButton">
+        saveSpectrumButton.setIcon(FontIcon.of(FontAwesome.SAVE, Color.GRAY));
         saveSpectrumButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 saveSpectrumChooser.setSelectedFile(new File(keyFile.getPath() + ".png"));
@@ -120,28 +157,16 @@ public class GuiFileFile {
                 update();
             }
         });
+        //</editor-fold>
 
-        clearButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dataFile = null;
-                keyFile = null;
-                ((SpectrumPanel)spectrumPanel).clear();
-                update();
-            }
-        });
-
-        calcButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                executor.execute(spectrum);
-            }
-        });
-
+        //<editor-fold desc="spectrumPanel">
         ((SpectrumPanel)spectrumPanel).setRootPanel(rootPane);
+        //</editor-fold>
 
-        //main method
+        //<editor-fold desc="progressBar">
         Timer t1 = new Timer();
         t1.schedule(new ProgressBarTimerTask(), 0,1000);
+        //</editor-fold>
 
         update();
     }

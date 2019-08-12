@@ -91,7 +91,7 @@ public class GuiFileNotepad {
         //</editor-fold>
 
         //<editor-fold desc="decodeButton">
-        decodeButton.setIcon(FontIcon.of(FontAwesome.SIGN_IN, Color.GRAY));
+        decodeButton.setIcon(FontIcon.of(FontAwesome.UNLOCK_ALT, Color.GRAY));
         decodeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -115,7 +115,7 @@ public class GuiFileNotepad {
         //</editor-fold>
 
         //<editor-fold desc="clearButton">
-        clearButton.setIcon(FontIcon.of(FontAwesome.POWER_OFF, Color.GRAY));
+        clearButton.setIcon(FontIcon.of(FontAwesome.EYE_SLASH, Color.GRAY));
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 passwordField.setText("");
