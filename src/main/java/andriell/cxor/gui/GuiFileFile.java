@@ -2,8 +2,6 @@ package andriell.cxor.gui;
 
 import andriell.cxor.crypto.CircularInputStream;
 import andriell.cxor.StringHelper;
-import org.kordamp.ikonli.fontawesome.FontAwesome;
-import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.*;
 import java.awt.*;

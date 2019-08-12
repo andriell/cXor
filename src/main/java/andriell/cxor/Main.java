@@ -1,5 +1,6 @@
 package andriell.cxor;
 
+import andriell.cxor.file.CryptoFiles;
 import andriell.cxor.gui.MainFrame;
 
 import javax.swing.*;
@@ -13,6 +14,9 @@ import java.util.List;
  * Created by Rybalko on 26.08.2016.
  */
 public class Main {
+    private static File dataFile;
+    private static int encodingType = -1;
+
     private static void setStyle() {
         // 	AATextInfoPropertyKey	sun.swing.SwingUtilities2$AATextInfo@442d9b6e
 
@@ -691,9 +695,20 @@ public class Main {
         MainFrame frame = new MainFrame();
         for (String a:args) {
             if (a != null && a.indexOf("--file=") == 0) {
-                frame.setDataFile(new File(a.substring(7)));
+                dataFile = new File(a.substring(7));
+            }
+            if (a != null && a.indexOf("--type=") == 0) {
+                encodingType = CryptoFiles.getInstance().getCryptoFileIndex(a.substring(7));
             }
         }
         frame.init();
+    }
+
+    public static File getDataFile() {
+        return dataFile;
+    }
+
+    public static int getEncodingType() {
+        return encodingType;
     }
 }

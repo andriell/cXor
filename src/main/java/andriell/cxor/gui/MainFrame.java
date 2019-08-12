@@ -14,7 +14,6 @@ public class MainFrame {
     private JPanel rootPane;
 
     private JFrame frame;
-    private File dataFile;
 
     public void init() {
         frame = new JFrame("Crypto XOR");
@@ -25,7 +24,6 @@ public class MainFrame {
         frame.setContentPane(rootPane);
 
         GuiFileNotepad guiFilePassword = new GuiFileNotepad();
-        guiFilePassword.setDataFile(dataFile);
         guiFilePassword.init();
         rootTabbedPane.addTab("Notepad", guiFilePassword.getRootPane());
 
@@ -57,13 +55,5 @@ public class MainFrame {
             }
         });
         frame.setVisible(true);
-    }
-
-    public File getDataFile() {
-        return dataFile;
-    }
-
-    public void setDataFile(File dataFile) {
-        this.dataFile = dataFile;
     }
 }

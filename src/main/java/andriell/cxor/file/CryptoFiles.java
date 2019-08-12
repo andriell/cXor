@@ -6,6 +6,7 @@ import java.io.File;
 
 public class CryptoFiles {
     private static CryptoFiles instance = null;
+    private static int default_index = 3;
 
     public static CryptoFiles getInstance() {
         if (instance == null) {
@@ -53,13 +54,39 @@ public class CryptoFiles {
      * @return int
      */
     public int getCryptoFileIndex(File file) {
+        if (file == null) {
+            return default_index;
+        }
         for (int i = 0; i < cryptoFiles.length; i++) {
             FileNameExtensionFilter filter = cryptoFiles[i].getExtensionFilter();
             if (filter.accept(file)) {
                 return i;
             }
         }
-        return 3;
+        return default_index;
+    }
+
+    /**
+     * Return index crypto file to open a file by description or extension of file format
+     * @param s String
+     * @return int
+     */
+    public int getCryptoFileIndex(String s) {
+        if (s == null) {
+            return default_index;
+        }
+        for (int i = 0; i < cryptoFiles.length; i++) {
+            if (s.equals(cryptoFiles[i].getDescription())) {
+                return i;
+            }
+            String[] extensions = cryptoFiles[i].getExtensions();
+            for (String extension: extensions) {
+                if (s.equals(extension)) {
+                    return i;
+                }
+            }
+        }
+        return default_index;
     }
 
     public CryptoFileInterface getCryptoFile(int i) {

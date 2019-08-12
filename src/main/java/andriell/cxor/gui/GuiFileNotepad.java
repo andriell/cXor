@@ -1,10 +1,9 @@
 package andriell.cxor.gui;
 
 import andriell.cxor.Constants;
+import andriell.cxor.Main;
 import andriell.cxor.file.CryptoFileInterface;
 import andriell.cxor.file.CryptoFiles;
-import org.kordamp.ikonli.fontawesome.FontAwesome;
-import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -73,8 +72,7 @@ public class GuiFileNotepad {
                 int ret = dataFileChooser.showOpenDialog(rootPane);
                 if (ret == JFileChooser.APPROVE_OPTION) {
                     dataFile = dataFileChooser.getSelectedFile();
-                    int i = CryptoFiles.getInstance().getCryptoFileIndex(dataFile);
-                    formatComboBox.setSelectedIndex(i);
+                    updateEncodingType();
                     Preferences.put(Preferences.LAST_USED_FOLDER_DATA_PASS, dataFileChooser.getSelectedFile().getParent());
                     update();
                 }
@@ -186,6 +184,14 @@ public class GuiFileNotepad {
         });
         //</editor-fold>
 
+        File file = Main.getDataFile();
+        if (file != null && file.isFile()) {
+            dataFile = file;
+            updateEncodingType();
+        }
+        if (Main.getEncodingType() >= 0) {
+            formatComboBox.setSelectedIndex(Main.getEncodingType());
+        }
         update();
     }
 
@@ -215,7 +221,7 @@ public class GuiFileNotepad {
             fileLabel.setText(this.error);
             fileLabel.setForeground(Color.RED);
         } else if (dataFile == null) {
-            fileLabel.setText("Not set");
+            fileLabel.setText("");
             fileLabel.setForeground(Color.BLACK);
         } else {
             fileLabel.setText(dataFile.getName());
@@ -223,12 +229,11 @@ public class GuiFileNotepad {
         }
     }
 
-    public void setDataFile(File dataFile) {
-        this.dataFile = dataFile;
-    }
-
-    public File getDataFile() {
-        return dataFile;
+    private void updateEncodingType() {
+        try {
+            int i = CryptoFiles.getInstance().getCryptoFileIndex(dataFile);
+            formatComboBox.setSelectedIndex(i);
+        } catch (Exception ignored) {}
     }
 
     private void createUIComponents() {
