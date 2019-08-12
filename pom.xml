@@ -8,14 +8,6 @@
     <artifactId>cXor</artifactId>
     <version>1.1.0</version>
 
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>jcenter</name>
-            <url>http://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>com.intellij</groupId>

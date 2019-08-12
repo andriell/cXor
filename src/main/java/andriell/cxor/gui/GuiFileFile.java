@@ -95,6 +95,14 @@ public class GuiFileFile {
         });
         //</editor-fold>
 
+        // skipNullBytesCheckBox.setIcon(FontIcon.of(FontAwesome.TOGGLE_OFF, Color.BLACK));
+        // skipNullBytesCheckBox.setSelectedIcon(FontIcon.of(FontAwesome.TOGGLE_ON, Color.BLACK));
+        // skipNullBytesCheckBox.setDisabledIcon(FontIcon.of(FontAwesome.TOGGLE_OFF, Color.GRAY));
+        // skipNullBytesCheckBox.setDisabledSelectedIcon(FontIcon.of(FontAwesome.TOGGLE_ON, Color.GRAY));
+        // skipNullBytesCheckBox.setPressedIcon(FontIcon.of(FontAwesome.TOGGLE_OFF, Color.BLACK));
+        // skipNullBytesCheckBox.setRolloverIcon(FontIcon.of(FontAwesome.TOGGLE_OFF, Color.BLACK));
+        // skipNullBytesCheckBox.setRolloverSelectedIcon(FontIcon.of(FontAwesome.TOGGLE_ON, Color.BLACK));
+
         //<editor-fold desc="saveButton">
         saveButton.setIcon(FontIcon.of(FontAwesome.SAVE, Color.GRAY));
         saveButton.addActionListener(new ActionListener() {

@@ -66,12 +66,6 @@ public class GuiFileNotepad {
         }
         //</editor-fold>
 
-        //<editor-fold desc="formatComboBox">
-        String[] descriptions = CryptoFiles.getInstance().getDescriptions();
-        DefaultComboBoxModel model = new DefaultComboBoxModel(descriptions);
-        formatComboBox.setModel(model);
-        //</editor-fold>
-
         //<editor-fold desc="openButton">
         openButton.setIcon(FontIcon.of(FontAwesome.FOLDER_OPEN, Color.GRAY));
         openButton.addActionListener(new ActionListener() {
@@ -88,6 +82,12 @@ public class GuiFileNotepad {
                 dataFileChooser.setPreferredSize(dataFileChooser.getSize());
             }
         });
+        //</editor-fold>
+
+        //<editor-fold desc="formatComboBox">
+        String[] descriptions = CryptoFiles.getInstance().getDescriptions();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(descriptions);
+        formatComboBox.setModel(model);
         //</editor-fold>
 
         //<editor-fold desc="decodeButton">

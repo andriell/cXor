@@ -5,7 +5,9 @@ import andriell.cxor.gui.MainFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Rybalko on 26.08.2016.
@@ -13,9 +15,11 @@ import java.util.Arrays;
 public class Main {
     private static void setStyle() {
         // 	AATextInfoPropertyKey	sun.swing.SwingUtilities2$AATextInfo@442d9b6e
+
         // 	activeCaption	javax.swing.plaf.ColorUIResource[r=184,g=207,b=229]
         // 	activeCaptionBorder	javax.swing.plaf.ColorUIResource[r=163,g=184,b=204]
         // 	activeCaptionText	sun.swing.PrintColorUIResource[r=51,g=51,b=51]
+
         // 	AuditoryCues.allAuditoryCues	[Ljava.lang.Object;@1698c449
         // 	AuditoryCues.cueList	[Ljava.lang.Object;@1698c449
         // 	AuditoryCues.defaultCueList	[Ljava.lang.Object;@1c655221
@@ -106,7 +110,9 @@ public class Main {
         // 	controlLtHighlight	javax.swing.plaf.ColorUIResource[r=255,g=255,b=255]
         // 	controlShadow	javax.swing.plaf.ColorUIResource[r=184,g=207,b=229]
         // 	controlText	sun.swing.PrintColorUIResource[r=51,g=51,b=51]
+
         // 	desktop	javax.swing.plaf.ColorUIResource[r=255,g=255,b=255]
+
         // 	Desktop.ancestorInputMap	javax.swing.plaf.InputMapUIResource@5ccd43c2
         // 	Desktop.background	javax.swing.plaf.ColorUIResource[r=255,g=255,b=255]
         // 	Desktop.minOnScreenInsets	javax.swing.plaf.InsetsUIResource[top=3,left=3,bottom=3,right=3]
@@ -555,9 +561,11 @@ public class Main {
         // 	TextField.selectionForeground	sun.swing.PrintColorUIResource[r=51,g=51,b=51]
         // 	TextField.shadow	javax.swing.plaf.ColorUIResource[r=184,g=207,b=229]
         // 	TextFieldUI	javax.swing.plaf.metal.MetalTextFieldUI
+
         // 	textHighlight	javax.swing.plaf.ColorUIResource[r=184,g=207,b=229]
         // 	textHighlightText	sun.swing.PrintColorUIResource[r=51,g=51,b=51]
         // 	textInactiveText	javax.swing.plaf.ColorUIResource[r=184,g=207,b=229]
+
         // 	TextPane.background	javax.swing.plaf.ColorUIResource[r=255,g=255,b=255]
         // 	TextPane.border	javax.swing.plaf.basic.BasicBorders$MarginBorder@e73f9ac
         // 	TextPane.caretBlinkRate	500
@@ -662,13 +670,20 @@ public class Main {
 
         Color color227 = new Color(227,227,227);
         Color color238 = new Color(238,238,238);
+        List<Serializable> gradientWhite = Arrays.asList(0.0, 0.0, Color.WHITE, Color.WHITE, Color.WHITE);
         UIManager.put("Button.background", color227);
         UIManager.put("TabbedPane.contentAreaColor", color238);
         UIManager.put("TabbedPane.selected", color238);
-        UIManager.put("ScrollBar.gradient", Arrays.asList(0.0, 0.0, Color.white, Color.white, Color.white));
+        UIManager.put("ScrollBar.gradient", gradientWhite);
         UIManager.put("ScrollBar.shadow", color238);
         UIManager.put("ScrollBar.thumbHighlight", color238);
         UIManager.put("ScrollBar.width", 14);
+
+        UIManager.put("ComboBox.background", color227);
+        UIManager.put("ComboBox.buttonBackground", color227);
+        UIManager.put("ComboBox.buttonShadow", color238);
+
+        UIManager.put("CheckBox.gradient", gradientWhite);
     }
 
     public static void main(String[] args) {
